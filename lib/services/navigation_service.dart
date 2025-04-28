@@ -13,9 +13,4 @@ class NavigationService {
   void goBack() {
     return navigatorKey.currentState?.pop();
   }
-
-  // Add other navigation methods as needed, e.g.:
-  // Future<dynamic>? navigateToGameScreen() {
-  //   return navigateTo(AppRoutes.game);
-  // }
 }

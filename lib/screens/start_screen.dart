@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cricket_game_scapia/screens/game_screen.dart';
 import 'package:cricket_game_scapia/utils/app_decorations.dart';
 import 'package:cricket_game_scapia/widgets/start_screen/game_title.dart';
 import 'package:cricket_game_scapia/widgets/start_screen/how_to_play_section.dart';
@@ -32,10 +31,8 @@ class _StartScreenState extends State<StartScreen> {
                   const SizedBox(height: 60),
                   const GameTitle(),
                   const SizedBox(height: 40),
-                  // How to Play Instructions
                   const HowToPlaySection(),
                   const SizedBox(height: 40),
-                  // Start Playing Button
                   const StartPlayingBtn(),
                   const SizedBox(height: 40),
                 ],

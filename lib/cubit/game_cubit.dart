@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:cricket_game_scapia/cubit/game_state.dart';
+import 'package:cricket_game_scapia/managers/turn_manager.dart';
+import 'package:cricket_game_scapia/managers/turn_timer_manager.dart';
 import 'package:cricket_game_scapia/utils/app_strings.dart';
 import 'package:cricket_game_scapia/utils/app_constants.dart';
 import 'package:cricket_game_scapia/models/player.dart';
@@ -10,89 +12,77 @@ class GameCubit extends Cubit<GameState> {
   final Player user = Player();
   final Player bot = Player();
   final Random _random;
-  Timer? _countdownTimer;
-  int _currentBall = 0;
-  final int _totalBallsPerInning = 6;
+
+  late final TurnTimerManager _timerManager;
+  late final TurnManager _turnManager;
+  static const int _totalBallsPerInning = 6;
 
   GameCubit({Random? random})
     : _random = random ?? Random(),
-      super(const GameState(currentPhase: GamePhase.userBatting));
+      super(const GameState(currentPhase: GamePhase.userBatting)) {
+    _timerManager = TurnTimerManager(
+      onTick: _handleTimerTick,
+      onTimeout: _handleTimeout,
+      isOwnerClosed: () => isClosed,
+    );
+    _turnManager = TurnManager(totalBallsPerInning: _totalBallsPerInning);
+  }
 
   @override
   Future<void> close() {
-    _stopTimer();
+    _timerManager.dispose();
     return super.close();
   }
 
+  void _handleTimerTick(int timeLeft) {
+    if (!isClosed) {
+      emit(state.copyWith(timeLeft: timeLeft));
+    }
+  }
+
   void startGame() {
-    _resetGameLogic();
+    user.reset();
+    bot.reset();
+    _turnManager.resetInnings();
+
     emit(
       GameState(
         currentPhase: GamePhase.userBatting,
         overlayType: OverlayType.battingIntro,
-        currentBall: _currentBall,
+        currentBall: _turnManager.currentBall,
         totalBallsPerInning: _totalBallsPerInning,
+        userScore: user.runs,
+        botScore: bot.runs,
       ),
     );
+
     Future.delayed(AppConstants.overlayHoldDuration, () {
       if (!isClosed) {
         emit(
           state.copyWith(overlayType: OverlayType.none, buttonsEnabled: true),
         );
-        _startTimer();
+        _timerManager.start();
       }
     });
-  }
-
-  void _resetGameLogic() {
-    user.reset();
-    bot.reset();
-    _currentBall = 0;
-  }
-
-  void _startTimer() {
-    _stopTimer();
-    if (isClosed) return;
-    int timeLeft = AppConstants.maxTimerSeconds;
-    emit(state.copyWith(timeLeft: timeLeft));
-
-    _countdownTimer = Timer.periodic(AppConstants.timerTickDuration, (timer) {
-      if (isClosed) {
-        timer.cancel();
-        return;
-      }
-      timeLeft--;
-      if (timeLeft <= 0) {
-        _handleTimeout();
-      } else if (!isClosed) {
-        emit(state.copyWith(timeLeft: timeLeft));
-      }
-    });
-  }
-
-  void _stopTimer() {
-    _countdownTimer?.cancel();
-    _countdownTimer = null;
   }
 
   void numberSelected(int userChoice) {
     if (state.isGameOver ||
         state.currentPhase != GamePhase.userBatting &&
-            state.currentPhase != GamePhase.botBatting)
+            state.currentPhase != GamePhase.botBatting) {
       return;
+    }
 
-    _stopTimer();
-    bool shouldTriggerAnim = state.currentPhase == GamePhase.userBatting;
+    _timerManager.stop();
+
     emit(
       state.copyWith(
         pressedButtonNumber: userChoice,
         buttonsEnabled: false,
-        triggerThrowAnimation: shouldTriggerAnim,
-        currentBall: _currentBall,
-        totalBallsPerInning: _totalBallsPerInning,
         userChoice: userChoice,
         botChoice: null,
         clearBotChoice: true,
+        currentBall: _turnManager.currentBall, // Show ball before it increments
       ),
     );
 
@@ -106,122 +96,99 @@ class GameCubit extends Cubit<GameState> {
 
       if (isClosed) return;
 
-      _playTurn(userChoice, botChoice);
-
-      bool enableButtonsAfterTurn =
-          !state.isGameOver &&
-          (state.currentPhase == GamePhase.userBatting ||
-              state.currentPhase == GamePhase.botBatting);
-
-      emit(
-        state.copyWith(
-          buttonsEnabled: enableButtonsAfterTurn,
-          clearPressedButton: true,
-          triggerThrowAnimation: false,
-          currentBall: _currentBall,
-          totalBallsPerInning: _totalBallsPerInning,
-          clearUserChoice: true,
-          clearBotChoice: true,
-        ),
-      );
-
-      if (enableButtonsAfterTurn) {
-        _startTimer();
-      }
+      _processTurn(userChoice, botChoice);
     });
   }
 
-  void _playTurn(int playerChoice, int botChoice) {
+  void _processTurn(int userChoice, int botChoice) {
     if (isClosed || state.isGameOver) return;
+
+    TurnResult result;
+    bool playSound = false;
+    OverlayType overlay = OverlayType.none;
+    Function? onOverlayComplete;
+
     if (state.currentPhase == GamePhase.userBatting) {
-      _handleBattingTurn(playerChoice, botChoice);
-    } else if (state.currentPhase == GamePhase.botBatting) {
-      _handleBowlingTurn(playerChoice, botChoice);
-    }
-  }
-
-  void _handleBattingTurn(int userChoice, int botChoice) {
-    bool isOut = userChoice == botChoice;
-    bool isSix = !isOut && userChoice == 6;
-    _currentBall++;
-    bool inningsOver = _currentBall >= _totalBallsPerInning;
-
-    if (isOut) {
-      user.markOut();
-      emit(state.copyWith(playOutSound: true));
-      _showOverlayAndContinue(OverlayType.out, _startBotInnings);
+      result = _turnManager.processUserTurn(userChoice, botChoice, user);
+      playSound = result.isOut || result.isSix;
+      overlay =
+          result.isOut
+              ? OverlayType.out
+              : (result.isSix ? OverlayType.sixer : OverlayType.none);
+      if (result.isEndOfInnings) {
+        onOverlayComplete = _startBotInnings;
+      }
     } else {
-      user.addRuns(userChoice);
-      emit(
-        state.copyWith(
-          userScore: user.runs,
-          playSixerSound: isSix,
-          overlayType: OverlayType.none,
-          currentBall: _currentBall,
-          totalBallsPerInning: _totalBallsPerInning,
-        ),
+      // Bot Batting
+      result = _turnManager.processBotTurn(
+        userChoice,
+        botChoice,
+        bot,
+        state.targetScore ?? 0,
       );
-      if (isSix) {
-        _showOverlayAndContinue(OverlayType.sixer, () {
-          if (inningsOver && !state.isGameOver) _startBotInnings();
-        });
-      } else if (inningsOver) {
-        _startBotInnings();
+      playSound = result.isOut || result.isSix;
+      overlay =
+          result.isOut
+              ? OverlayType.out
+              : (result.isSix ? OverlayType.sixer : OverlayType.none);
+      if (result.isEndOfInnings) {
+        onOverlayComplete = _endGame;
       }
     }
-  }
 
-  void _handleBowlingTurn(int userChoice, int botChoice) {
-    bool isOut = userChoice == botChoice;
-    bool isSix = !isOut && botChoice == 6;
-    _currentBall++;
-    bool inningsOver = _currentBall >= _totalBallsPerInning;
+    emit(
+      state.copyWith(
+        userScore: user.runs,
+        botScore: bot.runs,
+        playOutSound: result.isOut,
+        playSixerSound: result.isSix,
+        overlayType:
+            OverlayType
+                .none, // Reset overlay before potentially showing a new one
+        clearPressedButton: true,
+        currentBall: _turnManager.currentBall,
+        totalBallsPerInning: _totalBallsPerInning,
+        clearUserChoice: true,
+        clearBotChoice: true,
+      ),
+    );
 
-    if (isOut) {
-      bot.markOut();
-      emit(state.copyWith(playOutSound: true));
-      _showOverlayAndContinue(OverlayType.out, _endGame);
-    } else {
-      bot.addRuns(botChoice);
-      bool targetReached =
-          state.targetScore != null && bot.runs > state.targetScore!;
-      emit(
-        state.copyWith(
-          botScore: bot.runs,
-          playSixerSound: isSix,
-          overlayType: OverlayType.none,
-          currentBall: _currentBall,
-          totalBallsPerInning: _totalBallsPerInning,
-        ),
-      );
-
-      if (isSix) {
-        _showOverlayAndContinue(OverlayType.sixer, () {
-          if ((targetReached || inningsOver) && !state.isGameOver) _endGame();
-        });
-      } else if (targetReached || inningsOver) {
-        _endGame();
-      }
+    // Decide next step based on turn result
+    if (overlay != OverlayType.none) {
+      _showOverlayAndContinue(overlay, () {
+        if (onOverlayComplete != null) {
+          onOverlayComplete();
+        } else if (!state.isGameOver) {
+          // If no specific action (innings change/game over) and game continues, enable buttons & timer
+          emit(state.copyWith(buttonsEnabled: true));
+          _timerManager.start();
+        }
+      });
+    } else if (onOverlayComplete != null) {
+      // Handle end of innings without an overlay (e.g., last ball wasn't out/six)
+      onOverlayComplete();
+    } else if (!state.isGameOver) {
+      // Game continues, no overlay, no specific action -> Enable buttons & start timer
+      emit(state.copyWith(buttonsEnabled: true));
+      _timerManager.start();
     }
   }
 
   void _handleTimeout() {
-    _stopTimer();
     if (isClosed || state.isGameOver) return;
+    _timerManager.stop(); // Ensure timer is stopped
 
     String winner;
-    bool playWin = false, playLose = false;
-    OverlayType timeoutOverlay = OverlayType.none;
+    OverlayType timeoutOverlay;
+    bool playLoseSound = true;
 
     if (state.currentPhase == GamePhase.userBatting) {
-      user.markOut();
+      user.markOut(); // User timed out batting -> Bot wins
       winner = "Bot Wins! (Timeout)";
-      playLose = true;
       timeoutOverlay = OverlayType.lost;
     } else {
-      winner = "${AppStrings.youLostText} (Timeout)";
-      playWin = false;
-      playLose = true;
+      // Bot batting (User bowling) -> User timed out bowling -> Bot wins
+      winner = "Bot Wins! (Timeout)"; // Or AppStrings.youLostText?
       timeoutOverlay = OverlayType.lost;
     }
 
@@ -232,9 +199,10 @@ class GameCubit extends Cubit<GameState> {
         currentPhase: GamePhase.gameOver,
         buttonsEnabled: false,
         overlayType: timeoutOverlay,
-        playWinSound: playWin,
-        playLoseSound: playLose,
-        currentBall: _currentBall,
+        playLoseSound: playLoseSound,
+        userScore: user.runs, // Update scores in final state
+        botScore: bot.runs,
+        currentBall: _turnManager.currentBall,
         totalBallsPerInning: _totalBallsPerInning,
       ),
     );
@@ -242,28 +210,32 @@ class GameCubit extends Cubit<GameState> {
 
   void _startBotInnings() {
     if (isClosed || state.isGameOver) return;
-    _currentBall = 0;
+    _turnManager.resetInnings();
     emit(
       state.copyWith(
         currentPhase: GamePhase.botBatting,
         targetScore: user.runs,
         buttonsEnabled: false,
         playInningsChangeSound: true,
-        currentBall: _currentBall,
+        overlayType:
+            OverlayType.none, // Ensure overlay is off before defend overlay
+        currentBall: _turnManager.currentBall,
         totalBallsPerInning: _totalBallsPerInning,
+        userScore: user.runs,
+        botScore: bot.runs,
       ),
     );
     _showOverlayAndContinue(OverlayType.defend, () {
       if (!isClosed && !state.isGameOver) {
         emit(state.copyWith(buttonsEnabled: true));
-        _startTimer();
+        _timerManager.start();
       }
     });
   }
 
   void _endGame() {
     if (isClosed || state.currentPhase == GamePhase.gameOver) return;
-    _stopTimer();
+    _timerManager.stop();
     String winner;
     OverlayType finalOverlay;
     bool playWin = false, playLose = false, playTie = false;
@@ -292,7 +264,9 @@ class GameCubit extends Cubit<GameState> {
         playWinSound: playWin,
         playLoseSound: playLose,
         playTieSound: playTie,
-        currentBall: _currentBall,
+        userScore: user.runs,
+        botScore: bot.runs,
+        currentBall: _turnManager.currentBall,
         totalBallsPerInning: _totalBallsPerInning,
       ),
     );
@@ -309,6 +283,7 @@ class GameCubit extends Cubit<GameState> {
               type == OverlayType.won ||
               type == OverlayType.lost ||
               type == OverlayType.tie;
+          // Only hide intermediate overlays
           if (!isFinalOverlay) {
             emit(state.copyWith(overlayType: OverlayType.none));
           }

@@ -1,5 +1,5 @@
-import 'package:cricket_game_scapia/utils/app_constants.dart'; // Import AppConstants
-import 'package:cricket_game_scapia/utils/app_text_styles.dart'; // Import AppTextStyles
+import 'package:cricket_game_scapia/utils/app_constants.dart';
+import 'package:cricket_game_scapia/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class AppDecorations {
@@ -26,7 +26,7 @@ class AppDecorations {
     borderRadius: startButtonRadius,
     boxShadow: [
       BoxShadow(
-        color: Colors.black.withOpacity(0.2),
+        color: Colors.black.withAlpha(51),
         spreadRadius: 1,
         blurRadius: 4,
         offset: const Offset(0, 2),
