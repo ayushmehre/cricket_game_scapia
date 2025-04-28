@@ -33,6 +33,21 @@ This project demonstrates a basic Hand Cricket game where the user plays against
 - **Code Style:** Follows standard Flutter linting rules.
 - **Assets & Styles:** Centralized management of strings (`AppStrings`), assets (`AppAssets`), text styles (`AppTextStyles`), constants (`AppConstants`), and decorations (`AppDecorations`).
 
+## Development Approach & Design Decisions
+
+- **Approach:** Adopted an iterative approach, prioritizing core gameplay stability and addressing critical bugs (asset loading, lifecycle crashes on restart) before focusing on UI refinements and specific behavioral fixes based on testing.
+- **Architecture:** Leveraged standard Flutter patterns including Bloc/Cubit for predictable state management and GetIt for straightforward dependency injection, maintaining a clear separation between UI, state, and services/utilities.
+- **Code Quality:** Ensured maintainability by centralizing reusable values like constants, strings, asset paths, styles, and decorations within the `lib/utils/` directory.
+- **UI Implementation:** Made pragmatic UI decisions throughout development:
+  - Stabilized the initial UI by replacing problematic elements (missing Rive animation, image-based labels) with standard Flutter widgets (`Text`, `LinearGradient`, `Placeholder`).
+  - Iterated on the number button implementation, shifting from requirement-driven individual image assets to a more sustainable approach using a single base image combined with `Transform.scale` for the pressed state.
+  - Used `AspectRatio` to enforce consistent layout sizing for the number buttons, preventing visual changes when state updated.
+  - Added the `TurnInfoWidget` to provide clearer user feedback during turn processing.
+- **State Management:** Resolved several state-related challenges:
+  - Corrected timing issues in the `GameCubit` that led to stale UI elements (e.g., persistent overlays, intermediate choices not displaying) by refining state emission sequences and adding necessary delays.
+  - Fixed a visual bug on game restart by ensuring the `GameOverlayController` state was explicitly cleared when navigating back to the start screen.
+  - Addressed singleton lifecycle conflicts related to controller disposal via a pragmatic adjustment in the `GameScreen`'s dispose method, although this lifecycle interaction could benefit from further review for long-term robustness.
+
 ## Getting Started
 
 1.  **Ensure Flutter is installed.** See [Flutter documentation](https://docs.flutter.dev/get-started/install).
