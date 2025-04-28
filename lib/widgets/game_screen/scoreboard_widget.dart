@@ -66,13 +66,8 @@ class ScoreboardWidget extends StatelessWidget {
           if (targetScore != null) ...[
             const SizedBox(height: 10),
             Text(
-              '${AppStrings.targetLabel}: $targetScore', // Assuming AppStrings.targetLabel exists
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                shadows: [Shadow(blurRadius: 2, color: Colors.black54)],
-              ),
+              '${AppStrings.targetLabel}: $targetScore',
+              style: AppTextStyles.targetScore, // Use defined style
             ),
           ],
         ],
@@ -127,6 +122,12 @@ class _ScoreDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Determine color based on status
+    final statusColor =
+        status == AppStrings.battingStatus
+            ? Colors.lightGreenAccent.shade100
+            : Colors.orangeAccent.shade100;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -134,33 +135,14 @@ class _ScoreDisplay extends StatelessWidget {
         const SizedBox(height: 8),
         Text(
           '$score',
-          style: const TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-            fontFamily:
-                'Digital-7', // Consider adding to AppTextStyles or Theme
-            shadows: [
-              Shadow(
-                blurRadius: 2,
-                color: Colors.black87,
-                offset: Offset(1, 1),
-              ),
-            ],
-          ),
+          style: AppTextStyles.playerScore, // Use defined style
         ),
         const SizedBox(height: 4),
         Text(
           status,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color:
-                status == AppStrings.battingStatus
-                    ? Colors.lightGreenAccent.shade100
-                    : Colors.orangeAccent.shade100,
-            shadows: const [Shadow(blurRadius: 1, color: Colors.black54)],
-          ),
+          style: AppTextStyles.playerStatusBase.copyWith(
+            color: statusColor,
+          ), // Use base style + color
         ),
       ],
     );

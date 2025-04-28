@@ -1,6 +1,8 @@
 import 'package:cricket_game_scapia/cubit/game_state.dart';
 import 'package:cricket_game_scapia/screens/start_screen.dart';
+import 'package:cricket_game_scapia/utils/app_decorations.dart';
 import 'package:cricket_game_scapia/utils/app_strings.dart';
+import 'package:cricket_game_scapia/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class GameDialogService {
@@ -22,74 +24,39 @@ class GameDialogService {
       barrierDismissible: false,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
-          backgroundColor: Colors.brown.shade300,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            side: BorderSide(color: Colors.brown.shade700, width: 3),
-          ),
+          backgroundColor: AppDecorations.dialogBackground,
+          shape: AppDecorations.dialogShape,
           title: Text(
             resultText,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              color: resultColor,
-              fontWeight: FontWeight.bold,
-              fontSize: 28,
-              fontFamily: 'Pacifico',
-            ),
+            style: AppTextStyles.dialogTitleBase.copyWith(color: resultColor),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
                 '${AppStrings.yourScoreLabel}: ${state.userScore}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+                style: AppTextStyles.dialogContent,
               ),
               const SizedBox(height: 10),
               Text(
                 '${AppStrings.botScoreLabel}: ${state.botScore}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                ),
+                style: AppTextStyles.dialogContent,
               ),
             ],
           ),
           actionsAlignment: MainAxisAlignment.center,
           actions: <Widget>[
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.yellow.shade700,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: 15,
-                ),
-                textStyle: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-              ),
-              child: const Text(
-                AppStrings.playAgainButton,
-                style: TextStyle(color: Colors.black), // Can be const
-              ),
+              style: AppDecorations.dialogButtonStyle,
+              child: const Text(AppStrings.playAgainButton),
               onPressed: () {
-                Navigator.of(dialogContext).pop(); // Close the dialog
-                // Navigate back to StartScreen
+                Navigator.of(dialogContext).pop();
                 Navigator.pushAndRemoveUntil(
-                  context, // Use the original context from the screen
+                  context,
                   MaterialPageRoute(builder: (_) => const StartScreen()),
                   (route) => false,
                 );
-                // onPlayAgain?.call(); // Call callback if provided
               },
             ),
           ],

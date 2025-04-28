@@ -1,5 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cricket_game_scapia/screens/game_screen.dart';
+import 'package:cricket_game_scapia/utils/app_decorations.dart';
+import 'package:cricket_game_scapia/utils/app_text_styles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cricket_game_scapia/utils/app_strings.dart';
@@ -33,42 +35,25 @@ class StartPlayingBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Try getting base style from theme first
+    final baseTextStyle = Theme.of(context).textTheme.labelLarge;
+    final effectiveTextStyle =
+        baseTextStyle?.copyWith(
+          color: AppTextStyles.startButton.color,
+          fontWeight: AppTextStyles.startButton.fontWeight,
+        ) ??
+        AppTextStyles.startButton;
+
     return GestureDetector(
       onTap: () {
-        _playStartSound(); // Play sound
-        _navigateToGameScreen(context); // Navigate directly
+        // TODO: Use GameAudioController via locator to play sound consistently
+        _playStartSound();
+        _navigateToGameScreen(context);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: <Color>[Colors.yellow.shade300, Colors.yellow.shade800],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
-          borderRadius: BorderRadius.circular(8.0),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Text(
-          AppStrings.startPlayingButton,
-          style:
-              Theme.of(context).textTheme.labelLarge?.copyWith(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ) ??
-              const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 20.0,
-              ),
-        ),
+        decoration: AppDecorations.startButtonDecoration,
+        child: Text(AppStrings.startPlayingButton, style: effectiveTextStyle),
       ),
     );
   }

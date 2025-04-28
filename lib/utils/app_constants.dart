@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart'; // Add Material import for Color
+
 /// Defines constant values used across the application.
 class AppConstants {
   AppConstants._(); // Prevents instantiation
@@ -22,6 +24,14 @@ class AppConstants {
   static const double numberGridPadding = 30.0;
   static const double numberGridSpacing = 15.0;
   static const double numberGridAspectRatio = 1.5;
+
+  // UI Colors (Consider a separate AppColors class if this grows)
+  static final Color numberButtonBg = Colors.yellow.shade700;
+  static final Color numberButtonPressedBg = Colors.orange.shade600;
+  static final Color numberButtonDisabledBg = Colors.grey.shade600;
+  static const Color numberButtonText = Colors.black;
+  static final Color numberButtonDisabledText = Colors.grey.shade400;
+  static const double numberButtonDisabledOpacity = 0.5;
 
   // Add other constants like default volumes, API endpoints, etc. here
 }

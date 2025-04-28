@@ -1,51 +1,76 @@
+import 'package:cricket_game_scapia/utils/app_constants.dart'; // Import AppConstants
 import 'package:flutter/material.dart';
 
 /// Central repository for reusable text styles used across the application.
 class AppTextStyles {
   AppTextStyles._(); // Private constructor to prevent instantiation
 
+  // --- Font Families --- (Could also be in AppConstants)
+  static const String digitalFontFamily = 'Digital-7';
+  static const String pacificoFontFamily = 'Pacifico';
+
+  // --- Scoreboard Styles ---
+  static const TextStyle targetScore = TextStyle(
+    color: Colors.white,
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    shadows: [Shadow(blurRadius: 2, color: Colors.black54)],
+  );
+
+  static const TextStyle playerScore = TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+    fontFamily: digitalFontFamily,
+    shadows: [
+      Shadow(blurRadius: 2, color: Colors.black87, offset: Offset(1, 1)),
+    ],
+  );
+
+  // Base style for player status, color needs to be applied based on status
+  static const TextStyle playerStatusBase = TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+    shadows: [Shadow(blurRadius: 1, color: Colors.black54)],
+  );
+
+  // --- Existing Styles ---
   static final TextStyle statusText = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
-    color: Colors.indigo.shade900,
+    color: Colors.indigo.shade900, // Non-const color requires final
     shadows: const [
       Shadow(blurRadius: 1, color: Colors.white, offset: Offset(1, 1)),
     ],
   );
 
-  // --- Styles Moved from text_styles.dart ---
   static const TextStyle headingGold = TextStyle(
-    fontSize: 32.0, // Increased font size
+    fontSize: 32.0,
     fontWeight: FontWeight.bold,
-    color: Colors.white, // Add white color for ShaderMask to work correctly
+    color: Colors.white,
   );
 
-  /// Style for the countdown timer text.
   static const TextStyle timerText = TextStyle(
-    fontSize: 28.0, // Reduced font size for circle
+    fontSize: 28.0,
     fontWeight: FontWeight.bold,
-    color: Colors.white, // Needed for ShaderMask
+    color: Colors.white,
   );
 
-  /// Fallback style for the "How to play" heading.
   static const TextStyle howToPlayHeadingFallback = TextStyle(
-    fontSize: 24, // Example size
+    fontSize: 24,
     fontWeight: FontWeight.bold,
-    color: Colors.white, // Color is overridden by ShaderMask
+    color: Colors.white,
   );
 
-  /// Returns the style for the main game title, incorporating the glow effect.
-  /// Consider making glowValue an optional parameter if default glow is common.
   static TextStyle getGameTitleStyle(BuildContext context, double glowValue) {
-    // Access theme safely
     final baseStyle = Theme.of(context).textTheme.displayMedium;
-    // Default to fallback style if theme or style is null
     final effectiveStyle =
-        baseStyle?.copyWith(fontFamily: 'Pacifico') ?? gameTitleFallback;
+        baseStyle?.copyWith(fontFamily: pacificoFontFamily) ??
+        gameTitleFallback;
 
     return effectiveStyle.copyWith(
       fontWeight: FontWeight.bold,
-      color: Colors.white, // Ensure color is white for shadows
+      color: Colors.white,
       shadows: [
         Shadow(
           blurRadius: glowValue,
@@ -61,34 +86,54 @@ class AppTextStyles {
     );
   }
 
-  /// Fallback style for the main game title.
   static const TextStyle gameTitleFallback = TextStyle(
     fontSize: 50,
     fontWeight: FontWeight.bold,
     color: Colors.white,
-    fontFamily: 'Pacifico',
+    fontFamily: pacificoFontFamily,
   );
 
-  // --- Shaders Moved from text_styles.dart ---
-  // Note: Shaders might be better placed in a dedicated 'app_effects.dart' or similar
-  // if more visual effects are added later.
+  // --- Shaders ---
   static final Shader goldGradientShader = LinearGradient(
-    colors: <Color>[
-      Colors.yellow.shade300,
-      Colors.yellow.shade800,
-    ], // Light gold to dark gold
+    colors: <Color>[Colors.yellow.shade300, Colors.yellow.shade800],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
-  ).createShader(
-    const Rect.fromLTWH(
-      0.0,
-      0.0,
-      200.0,
-      70.0,
-    ), // Consider making Rect configurable or dynamic
+  ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+
+  // --- Number Input Grid Styles ---
+  static const TextStyle numberButton = TextStyle(
+    fontSize: 24.0,
+    fontWeight: FontWeight.bold,
+    color: AppConstants.numberButtonText, // Use color from AppConstants
+  );
+
+  // --- Start Playing Button ---
+  static const TextStyle startButton = TextStyle(
+    color: Colors.black, // Specific color for this button
+    fontWeight: FontWeight.bold,
+    fontSize: 20.0,
+  );
+
+  // --- Dialog Styles ---
+  // Base style, color determined dynamically in the dialog
+  static const TextStyle dialogTitleBase = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontSize: 28,
+    fontFamily: AppTextStyles.pacificoFontFamily, // Use existing constant
+  );
+
+  static const TextStyle dialogContent = TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.w500,
+    color: Colors.white,
+  );
+
+  static const TextStyle dialogButtonText = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: Colors.black, // Specific color for this button
   );
 
   // Add other reusable text styles here
-  // static const TextStyle scoreText = TextStyle(...);
   // static const TextStyle buttonText = TextStyle(...);
 }
