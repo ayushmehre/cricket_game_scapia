@@ -1,7 +1,7 @@
 import 'package:cricket_game_scapia/locator.dart';
 import 'package:cricket_game_scapia/screens/game_screen.dart';
 import 'package:cricket_game_scapia/screens/start_screen.dart';
-import 'package:cricket_game_scapia/services/navigation_service.dart';
+import 'package:cricket_game_scapia/core/navigation_service.dart';
 import 'package:cricket_game_scapia/utils/app_strings.dart';
 import 'package:cricket_game_scapia/utils/routes.dart';
 import 'package:flutter/material.dart';

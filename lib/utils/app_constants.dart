@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart'; // Add Material import for Color
+import 'package:flutter/material.dart';
 
 /// Defines constant values used across the application.
 class AppConstants {
-  AppConstants._(); // Prevents instantiation
+  AppConstants._();
 
   // Durations
   static const Duration overlayFadeDuration = Duration(milliseconds: 300);
@@ -73,6 +73,4 @@ class AppConstants {
   static const double timerBackgroundOpacity = 0.3;
   static const double overlayBackgroundOpacity = 0.7;
   static const double errorBackgroundOpacity = 0.5;
-
-  // Add other constants like default volumes, API endpoints, etc. here
 }

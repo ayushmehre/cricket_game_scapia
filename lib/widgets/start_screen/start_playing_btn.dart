@@ -4,12 +4,11 @@ import 'package:cricket_game_scapia/utils/app_decorations.dart';
 import 'package:cricket_game_scapia/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:cricket_game_scapia/utils/app_strings.dart';
-import 'package:cricket_game_scapia/services/navigation_service.dart';
+import 'package:cricket_game_scapia/core/navigation_service.dart';
 import 'package:cricket_game_scapia/utils/routes.dart';
 
 /// A button that navigates to the GameScreen and plays a sound on tap using GameAudioController.
 class StartPlayingBtn extends StatelessWidget {
-  /// Creates a [StartPlayingBtn].
   const StartPlayingBtn({super.key});
 
   void _navigateToGameScreen() {
@@ -19,7 +18,6 @@ class StartPlayingBtn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Try getting base style from theme first
     final baseTextStyle = Theme.of(context).textTheme.labelLarge;
     final effectiveTextStyle =
         baseTextStyle?.copyWith(
@@ -30,7 +28,6 @@ class StartPlayingBtn extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        // Play start sound via controller
         final audioController = locator<IGameAudioController>();
         audioController.playStartGameSfx();
 

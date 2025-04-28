@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 /// Central repository for reusable text styles used across the application.
 class AppTextStyles {
-  AppTextStyles._(); // Private constructor to prevent instantiation
+  AppTextStyles._();
 
   // --- Font Families ---
   static const String digitalFontFamily = 'Digital-7';
@@ -38,7 +38,7 @@ class AppTextStyles {
   static final TextStyle statusText = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
-    color: Colors.indigo.shade900,
+    color: const Color.fromARGB(255, 90, 198, 101),
     shadows: const [
       Shadow(blurRadius: 1, color: Colors.white, offset: Offset(1, 1)),
     ],
@@ -74,7 +74,7 @@ class AppTextStyles {
       shadows: [
         Shadow(
           blurRadius: glowValue,
-          color: Colors.yellowAccent.withOpacity(0.7),
+          color: Colors.yellowAccent.withAlpha(179),
           offset: Offset.zero,
         ),
         Shadow(
@@ -143,7 +143,7 @@ class AppTextStyles {
   static final TextStyle playerRoleText = _base.copyWith(
     fontSize: 16,
     fontWeight: FontWeight.w500,
-    color: Colors.white70,
+    color: Colors.white,
   );
 
   static final TextStyle turnInfoText = _base.copyWith(
@@ -160,7 +160,4 @@ class AppTextStyles {
     color: AppConstants.errorForegroundColor,
     fontSize: 14,
   );
-
-  // Add other reusable text styles here
-  // static const TextStyle buttonText = TextStyle(...);
 }

@@ -12,7 +12,7 @@ class AppAssets {
 
 /// Defines image asset paths.
 class _Images {
-  const _Images(); // Keep constructor const
+  const _Images();
 
   // --- Start Screen ---
   final String step1 = 'assets/images/step_1.png';
@@ -54,9 +54,8 @@ class _Images {
   }
 }
 
-/// Defines audio asset paths.
 class _Audio {
-  const _Audio(); // Keep constructor const
+  const _Audio();
 
   // --- Start Screen ---
   final String startGame = 'audio/game_start.mp3';

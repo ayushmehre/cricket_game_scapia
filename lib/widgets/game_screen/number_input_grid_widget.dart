@@ -1,7 +1,7 @@
 import 'package:cricket_game_scapia/utils/app_constants.dart';
 import 'package:cricket_game_scapia/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:cricket_game_scapia/controllers/game_audio_controller.dart';
+import 'package:cricket_game_scapia/core/game_audio_controller.dart';
 import 'package:cricket_game_scapia/locator.dart';
 import 'package:cricket_game_scapia/utils/app_assets.dart';
 import 'package:cricket_game_scapia/interfaces/i_game_audio_controller.dart';

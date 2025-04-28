@@ -1,4 +1,4 @@
-import 'package:cricket_game_scapia/controllers/game_overlay_controller.dart';
+import 'package:cricket_game_scapia/core/game_overlay_controller.dart';
 import 'package:cricket_game_scapia/cubit/game_state.dart';
 import 'package:cricket_game_scapia/locator.dart';
 import 'package:cricket_game_scapia/screens/start_screen.dart';

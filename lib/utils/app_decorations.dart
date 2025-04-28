@@ -3,7 +3,7 @@ import 'package:cricket_game_scapia/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 class AppDecorations {
-  AppDecorations._(); // Private constructor
+  AppDecorations._();
 
   static BoxDecoration backgroundGradient = BoxDecoration(
     gradient: LinearGradient(
@@ -39,7 +39,7 @@ class AppDecorations {
     colors: [
       AppConstants.scoreboardGradientColor1,
       AppConstants.scoreboardGradientColor2,
-      AppConstants.scoreboardGradientColor1, // Repeat for effect
+      AppConstants.scoreboardGradientColor1,
     ],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -48,9 +48,9 @@ class AppDecorations {
   static final scoreboardShadow = [
     BoxShadow(
       color: AppConstants.scoreboardShadowColor,
-      spreadRadius: 2, // Keep hardcoded or make constants?
-      blurRadius: 5, // Keep hardcoded or make constants?
-      offset: const Offset(0, 3), // Keep hardcoded or make constants?
+      spreadRadius: 2,
+      blurRadius: 5,
+      offset: const Offset(0, 3),
     ),
   ];
 
@@ -79,7 +79,5 @@ class AppDecorations {
     colors: <Color>[Colors.yellow.shade300, Colors.yellow.shade800],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
-  ).createShader(
-    const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
-  ); // Consider making Rect configurable
+  ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 }

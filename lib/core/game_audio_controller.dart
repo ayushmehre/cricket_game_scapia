@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:cricket_game_scapia/services/audio_manager.dart';
+import 'package:cricket_game_scapia/core/audio_manager.dart';
 import 'package:cricket_game_scapia/utils/app_assets.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cricket_game_scapia/interfaces/i_game_audio_controller.dart';
