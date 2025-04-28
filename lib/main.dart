@@ -2,39 +2,29 @@ import 'package:cricket_game_scapia/locator.dart';
 import 'package:cricket_game_scapia/screens/game_screen.dart';
 import 'package:cricket_game_scapia/screens/start_screen.dart';
 import 'package:cricket_game_scapia/services/navigation_service.dart';
+import 'package:cricket_game_scapia/utils/app_strings.dart';
 import 'package:cricket_game_scapia/utils/routes.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   setupLocator();
-  runApp(const MyApp());
+  runApp(const HandCricketApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class HandCricketApp extends StatelessWidget {
+  const HandCricketApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Get the navigation service instance
     final navigationService = locator<NavigationService>();
 
     return MaterialApp(
-      title: 'Hand Cricket',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      // Assign the navigator key
+      title: AppStrings.appTitle,
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(visualDensity: VisualDensity.adaptivePlatformDensity),
       navigatorKey: navigationService.navigatorKey,
-      // Define the routes
-      routes: {
-        AppRoutes.game: (context) => const GameScreen(),
-        // Assuming StartScreen is the initial route
-        // AppRoutes.home: (context) => const StartScreen(),
-      },
-      // Set the initial route
-      // initialRoute: AppRoutes.home,
-      home: const StartScreen(), // Start with StartScreen for now
+      routes: {AppRoutes.game: (context) => const GameScreen()},
+      home: const StartScreen(),
     );
   }
 }
