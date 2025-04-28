@@ -13,8 +13,9 @@ class GameDialogService {
     BuildContext context,
     GameState state,
   ) async {
-    if (!context.mounted || !state.isGameOver || state.winnerText == null)
+    if (!context.mounted || !state.isGameOver || state.winnerText == null) {
       return;
+    }
 
     String resultText = state.winnerText!;
     Color resultColor = _getResultColor(resultText);

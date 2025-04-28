@@ -19,39 +19,24 @@ class AudioManager {
   }
 
   Future<void> playBgm(String assetPath) async {
-    try {
-      final source = AssetSource(assetPath);
-      if (source != _currentBgmSource) {
-        await _bgmPlayer.stop();
-        await _bgmPlayer.play(source);
-        _currentBgmSource = source;
-      } else if (_bgmPlayer.state != PlayerState.playing) {
-        await _bgmPlayer.resume();
-      }
-    } catch (e) {
-      debugPrint("Error playing BGM ($assetPath): $e");
-      _currentBgmSource = null;
-      rethrow;
+    final source = AssetSource(assetPath);
+    if (source != _currentBgmSource) {
+      await _bgmPlayer.stop();
+      await _bgmPlayer.play(source);
+      _currentBgmSource = source;
+    } else if (_bgmPlayer.state != PlayerState.playing) {
+      await _bgmPlayer.resume();
     }
   }
 
   Future<void> stopBgm() async {
-    try {
-      await _bgmPlayer.stop();
-      _currentBgmSource = null;
-    } catch (e) {
-      debugPrint("Error stopping BGM: $e");
-    }
+    await _bgmPlayer.stop();
+    _currentBgmSource = null;
   }
 
   Future<void> playSfx(String assetPath) async {
-    try {
-      final source = AssetSource(assetPath);
-      await _sfxPlayer.play(source);
-    } catch (e) {
-      debugPrint("Error playing SFX ($assetPath): $e");
-      rethrow;
-    }
+    final source = AssetSource(assetPath);
+    await _sfxPlayer.play(source);
   }
 
   void dispose() {

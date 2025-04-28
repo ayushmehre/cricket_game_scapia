@@ -1,4 +1,5 @@
 import 'package:cricket_game_scapia/controllers/game_audio_controller.dart';
+import 'package:cricket_game_scapia/interfaces/i_game_audio_controller.dart';
 import 'package:cricket_game_scapia/locator.dart';
 import 'package:cricket_game_scapia/screens/game_screen.dart';
 import 'package:cricket_game_scapia/utils/app_decorations.dart';
@@ -33,9 +34,9 @@ class StartPlayingBtn extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        // Get controller from locator and play sound
-        final audioController = locator<GameAudioController>();
-        audioController.playSfx(AppAssets.audio.startGame);
+        // Play start sound via controller
+        final audioController = locator<IGameAudioController>();
+        audioController.playStartGameSfx();
 
         _navigateToGameScreen(context);
       },

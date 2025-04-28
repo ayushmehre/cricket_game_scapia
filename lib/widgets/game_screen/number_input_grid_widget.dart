@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:cricket_game_scapia/controllers/game_audio_controller.dart';
 import 'package:cricket_game_scapia/locator.dart';
 import 'package:cricket_game_scapia/utils/app_assets.dart';
+import 'package:cricket_game_scapia/interfaces/i_game_audio_controller.dart';
 
 /// Displays the grid of number buttons (1-6) for user input.
 class NumberInputGridWidget extends StatelessWidget {
@@ -20,7 +21,8 @@ class NumberInputGridWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GameAudioController audioController = locator<GameAudioController>();
+    final IGameAudioController audioController =
+        locator<IGameAudioController>();
 
     return GridView.builder(
       padding: const EdgeInsets.symmetric(
@@ -70,7 +72,7 @@ class NumberInputGridWidget extends StatelessWidget {
           onTap:
               isEnabled
                   ? () {
-                    audioController.playSfx(AppAssets.audio.click);
+                    audioController.playClickSfx();
                     onNumberSelected(number);
                   }
                   : null,

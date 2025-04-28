@@ -37,7 +37,7 @@ class _GameView extends StatefulWidget {
 }
 
 class _GameViewState extends State<_GameView> {
-  final GameAudioController _audioController = locator<GameAudioController>();
+  final IGameAudioController _audioController = locator<IGameAudioController>();
   final GameOverlayController _overlayController =
       locator<GameOverlayController>();
   final GameDialogService _dialogService = locator<GameDialogService>();
@@ -54,16 +54,13 @@ class _GameViewState extends State<_GameView> {
   void _listenToGameState(Stream<GameState> stream) {
     _gameStateSubscription = stream.listen(
       (state) {
-        if (state.playOutSound) _audioController.playSfx(AppAssets.audio.out);
-        if (state.playSixerSound) {
-          _audioController.playSfx(AppAssets.audio.sixer);
-        }
-        if (state.playInningsChangeSound) {
-          _audioController.playSfx(AppAssets.audio.inningsChange);
-        }
-        if (state.playWinSound) _audioController.playSfx(AppAssets.audio.win);
-        if (state.playLoseSound) _audioController.playSfx(AppAssets.audio.lose);
-        if (state.playTieSound) _audioController.playSfx(AppAssets.audio.tie);
+        if (state.playOutSound) _audioController.playOutSfx();
+        if (state.playSixerSound) _audioController.playSixerSfx();
+        if (state.playInningsChangeSound)
+          _audioController.playInningsChangeSfx();
+        if (state.playWinSound) _audioController.playWinSfx();
+        if (state.playLoseSound) _audioController.playLoseSfx();
+        if (state.playTieSound) _audioController.playTieSfx();
 
         if (state.isGameOver) {
           _audioController.stopBgm();
