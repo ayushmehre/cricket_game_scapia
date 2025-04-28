@@ -68,14 +68,14 @@ This project demonstrates a basic Hand Cricket game where the user plays against
 ## Project Structure (Key Directories)
 
 - `lib/`: Main application code.
-  - `cubit/`: Contains the `GameCubit` and `GameState`.
-  - `screens/`: UI screens (`start_screen.dart`, `game_screen.dart`).
-  - `widgets/`: Reusable UI components, categorized by screen.
-  - `controllers/`: UI-specific controllers (`GameAudioController`, `GameOverlayController`).
-  - `services/`: Contains the `AudioManager`.
+  - `core/`: Core logic, including services and controllers.
+  - `cubit/`: Contains the `GameCubit` and `GameState` (Bloc state management).
+  - `interfaces/`: Defines interfaces or abstract classes.
   - `models/`: Data models (e.g., `Player`).
-  - `utils/`: Utility classes (`AppAssets`, `AppStrings`, `AppTextStyles`, `AppConstants`, `AppDecorations`).
-  - `locator.dart`: Dependency injection setup.
+  - `screens/`: UI screens (`start_screen.dart`, `game_screen.dart`).
+  - `utils/`: Utility classes and constants (`AppAssets`, `AppStrings`, `AppTextStyles`, `AppConstants`, `AppDecorations`).
+  - `widgets/`: Reusable UI components.
+  - `locator.dart`: Dependency injection setup using `get_it`.
   - `main.dart`: Application entry point.
 - `assets/`: Static assets (images, audio).
 
