@@ -1,4 +1,5 @@
-import 'package:audioplayers/audioplayers.dart';
+import 'package:cricket_game_scapia/controllers/game_audio_controller.dart';
+import 'package:cricket_game_scapia/locator.dart';
 import 'package:cricket_game_scapia/screens/game_screen.dart';
 import 'package:cricket_game_scapia/utils/app_decorations.dart';
 import 'package:cricket_game_scapia/utils/app_text_styles.dart';
@@ -7,24 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:cricket_game_scapia/utils/app_strings.dart';
 import 'package:cricket_game_scapia/utils/app_assets.dart';
 
-/// A button that navigates to the GameScreen and plays a sound on tap.
+/// A button that navigates to the GameScreen and plays a sound on tap using GameAudioController.
 class StartPlayingBtn extends StatelessWidget {
   /// Creates a [StartPlayingBtn].
   const StartPlayingBtn({super.key});
-
-  /// Plays the game start sound effect.
-  Future<void> _playStartSound() async {
-    final player = AudioPlayer();
-    try {
-      await player.play(AssetSource(AppAssets.audio.startGame));
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error playing start sound: $e');
-      }
-    }
-    // Note: Disposing the player immediately might cut off the sound.
-    // Consider a dedicated audio service for better management if needed.
-  }
 
   void _navigateToGameScreen(BuildContext context) {
     Navigator.push(
@@ -46,8 +33,10 @@ class StartPlayingBtn extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        // TODO: Use GameAudioController via locator to play sound consistently
-        _playStartSound();
+        // Get controller from locator and play sound
+        final audioController = locator<GameAudioController>();
+        audioController.playSfx(AppAssets.audio.startGame);
+
         _navigateToGameScreen(context);
       },
       child: Container(
