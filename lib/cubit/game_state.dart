@@ -1,6 +1,5 @@
-import 'package:cricket_game_scapia/cubit/game_cubit.dart';
-import 'package:cricket_game_scapia/models/player.dart'; // Keep trying this path
 import 'package:equatable/equatable.dart';
+import 'package:cricket_game_scapia/utils/app_constants.dart';
 
 /// Enum defining the current phase of the game.
 enum GamePhase { userBatting, botBatting, gameOver }
@@ -36,13 +35,13 @@ class GameState extends Equatable {
     this.userScore = 0,
     this.botScore = 0,
     this.currentPhase = GamePhase.userBatting,
-    this.timeLeft = 10,
+    this.timeLeft = AppConstants.maxTimerSeconds,
     this.targetScore,
     this.buttonsEnabled = false,
     this.pressedButtonNumber,
     this.isGameOver = false,
     this.winnerText,
-    this.overlayType = OverlayType.battingIntro,
+    this.overlayType = OverlayType.none,
     this.playOutSound = false,
     this.playSixerSound = false,
     this.playInningsChangeSound = false,

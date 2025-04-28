@@ -20,17 +20,7 @@ class AppDecorations {
     end: Alignment.centerRight,
   );
   static final BorderRadius startButtonRadius = BorderRadius.circular(8.0);
-  // static final EdgeInsets startButtonPadding = const EdgeInsets.symmetric(vertical: 15.0, horizontal: 30.0);
-  // static final List<BoxShadow> startButtonShadow = [
-  //   BoxShadow(
-  //     color: Colors.black.withOpacity(0.2),
-  //     spreadRadius: 1,
-  //     blurRadius: 4,
-  //     offset: const Offset(0, 2),
-  //   ),
-  // ];
 
-  // Combine into a full decoration:
   static final BoxDecoration startButtonDecoration = BoxDecoration(
     gradient: startButtonGradient,
     borderRadius: startButtonRadius,

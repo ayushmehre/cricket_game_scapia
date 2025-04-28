@@ -1,11 +1,11 @@
-import 'package:cricket_game_scapia/utils/app_constants.dart'; // Import AppConstants
+import 'package:cricket_game_scapia/utils/app_constants.dart';
 import 'package:flutter/material.dart';
 
 /// Central repository for reusable text styles used across the application.
 class AppTextStyles {
   AppTextStyles._(); // Private constructor to prevent instantiation
 
-  // --- Font Families --- (Could also be in AppConstants)
+  // --- Font Families ---
   static const String digitalFontFamily = 'Digital-7';
   static const String pacificoFontFamily = 'Pacifico';
   static const String creepsterFontFamily = 'Creepster';
@@ -28,7 +28,6 @@ class AppTextStyles {
     ],
   );
 
-  // Base style for player status, color needs to be applied based on status
   static const TextStyle playerStatusBase = TextStyle(
     fontSize: 14,
     fontWeight: FontWeight.bold,
@@ -39,12 +38,7 @@ class AppTextStyles {
   static final TextStyle statusText = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
-    color: const Color.fromARGB(
-      255,
-      0,
-      255,
-      153,
-    ), // Non-const color requires final
+    color: Colors.indigo.shade900,
     shadows: const [
       Shadow(blurRadius: 1, color: Colors.white, offset: Offset(1, 1)),
     ],
@@ -103,23 +97,22 @@ class AppTextStyles {
   static const TextStyle numberButton = TextStyle(
     fontSize: 24.0,
     fontWeight: FontWeight.bold,
-    color: AppConstants.numberButtonText, // Use color from AppConstants
+    color: AppConstants.numberButtonText,
   );
 
   // --- Start Playing Button ---
   static const TextStyle startButton = TextStyle(
-    color: Colors.black, // Specific color for this button
+    color: Colors.black,
     fontWeight: FontWeight.bold,
     fontSize: 20.0,
   );
 
   // --- Dialog Styles ---
-  // Base style, color determined dynamically in the dialog
   static const TextStyle dialogTitleBase = TextStyle(
     fontWeight: FontWeight.bold,
     fontSize: 28,
-    fontFamily: AppTextStyles.pacificoFontFamily, // Use existing constant
-    color: Colors.white, // Added base color
+    fontFamily: AppTextStyles.pacificoFontFamily,
+    color: Colors.white,
   );
 
   static const TextStyle dialogContent = TextStyle(
@@ -131,26 +124,26 @@ class AppTextStyles {
   static const TextStyle dialogButtonText = TextStyle(
     fontSize: 18,
     fontWeight: FontWeight.bold,
-    color: Colors.black, // Specific color for this button
+    color: Colors.black,
   );
 
-  // Base styles
+  // --- Base styles ---
   static const TextStyle _base = TextStyle(
-    fontFamily: 'Roboto', // Example font
+    fontFamily: 'Roboto',
     color: Colors.white,
   );
 
   static final TextStyle playerLabel = _base.copyWith(
     fontSize: 18,
     fontWeight: FontWeight.bold,
-    color: Colors.yellowAccent.shade100, // Example color
+    color: Colors.yellowAccent.shade100,
     letterSpacing: 1.2,
   );
 
   static final TextStyle playerRoleText = _base.copyWith(
     fontSize: 16,
     fontWeight: FontWeight.w500,
-    color: Colors.white70, // Slightly subdued color
+    color: Colors.white70,
   );
 
   static final TextStyle turnInfoText = _base.copyWith(
@@ -158,15 +151,14 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
     color: Colors.white,
     shadows: [
-      // Add subtle shadow for readability
       Shadow(blurRadius: 2, color: Colors.black54, offset: Offset(1, 1)),
     ],
-  ); // Added
+  );
 
   // --- Error/Fallback Style ---
   static final TextStyle errorText = TextStyle(
     color: AppConstants.errorForegroundColor,
-    fontSize: 14, // Example size, adjust as needed
+    fontSize: 14,
   );
 
   // Add other reusable text styles here

@@ -1,75 +1,62 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/foundation.dart';
 
-/// Manages background music and sound effects playback.
+/// Manages audio playback using the audioplayers package.
 class AudioManager {
-  final AudioPlayer _bgmPlayer = AudioPlayer();
-  final AudioPlayer _sfxPlayer = AudioPlayer();
+  final AudioPlayer _bgmPlayer;
+  final AudioPlayer _sfxPlayer;
+  Source? _currentBgmSource;
 
-  bool _isBgmPlaying = false;
+  AudioManager({AudioPlayer? bgmPlayer, AudioPlayer? sfxPlayer})
+    : _bgmPlayer = bgmPlayer ?? AudioPlayer(),
+      _sfxPlayer = sfxPlayer ?? AudioPlayer();
 
-  /// Initializes the audio players.
   Future<void> init() async {
-    // Configure players
-    _bgmPlayer.setReleaseMode(ReleaseMode.loop);
-    await _bgmPlayer.setVolume(0.5); // Set default BGM volume
-
-    _sfxPlayer.setReleaseMode(
-      ReleaseMode.stop,
-    ); // Stop previous SFX before playing new
-
-    // Pre-loading sounds can improve performance but uses more memory.
-    // Example: await _sfxPlayer.audioCache.load('audio/click.mp3');
+    await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
+    await _sfxPlayer.setReleaseMode(ReleaseMode.release);
+    await _bgmPlayer.setVolume(0.3);
+    await _sfxPlayer.setVolume(0.8);
   }
 
-  /// Plays the background music.
-  ///
-  /// [path] The asset path for the BGM.
-  Future<void> playBgm(String path) async {
-    if (_isBgmPlaying) return; // Don't restart if already playing
+  Future<void> playBgm(String assetPath) async {
     try {
-      await _bgmPlayer.play(AssetSource(path));
-      _isBgmPlaying = true;
-    } catch (e) {
-      if (kDebugMode) {
-        print("Error playing BGM: $e");
+      final source = AssetSource(assetPath);
+      if (source != _currentBgmSource) {
+        await _bgmPlayer.stop();
+        await _bgmPlayer.play(source);
+        _currentBgmSource = source;
+      } else if (_bgmPlayer.state != PlayerState.playing) {
+        await _bgmPlayer.resume();
       }
+    } catch (e) {
+      debugPrint("Error playing BGM ($assetPath): $e");
+      _currentBgmSource = null;
+      rethrow;
     }
   }
 
-  /// Stops the background music.
   Future<void> stopBgm() async {
-    if (!_isBgmPlaying) return;
     try {
       await _bgmPlayer.stop();
-      _isBgmPlaying = false;
+      _currentBgmSource = null;
     } catch (e) {
-      if (kDebugMode) {
-        print("Error stopping BGM: $e");
-      }
+      debugPrint("Error stopping BGM: $e");
     }
   }
 
-  /// Plays a sound effect.
-  ///
-  /// [path] The asset path for the SFX.
-  Future<void> playSfx(String path) async {
+  Future<void> playSfx(String assetPath) async {
     try {
-      // No need to stop manually if ReleaseMode.stop is set
-      await _sfxPlayer.play(AssetSource(path));
+      final source = AssetSource(assetPath);
+      await _sfxPlayer.play(source);
     } catch (e) {
-      if (kDebugMode) {
-        print("Error playing SFX ($path): $e");
-      }
+      debugPrint("Error playing SFX ($assetPath): $e");
+      rethrow;
     }
   }
 
-  /// Releases resources used by the audio players.
   void dispose() {
     _bgmPlayer.dispose();
     _sfxPlayer.dispose();
-    if (kDebugMode) {
-      print("AudioManager disposed.");
-    }
+    debugPrint("AudioManager disposed.");
   }
 }

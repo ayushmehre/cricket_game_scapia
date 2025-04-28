@@ -3,23 +3,8 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:cricket_game_scapia/cubit/game_state.dart';
 import 'package:cricket_game_scapia/utils/app_strings.dart';
-import 'package:cricket_game_scapia/utils/app_constants.dart'; // Import constants
-// Player is likely also in controller.dart or player.dart, remove local if duplicate
+import 'package:cricket_game_scapia/utils/app_constants.dart';
 import 'package:cricket_game_scapia/models/player.dart';
-
-// Remove local Player class if defined in imported file
-/*
-class Player {
-  int runs = 0;
-  bool isOut = false;
-  void addRuns(int r) { runs += r; }
-  void markOut() { isOut = true; }
-  void reset() { runs = 0; isOut = false; }
-}
-*/
-
-// Remove locally defined GamePhase enum
-// enum GamePhase { userBatting, botBatting, gameOver }
 
 class GameCubit extends Cubit<GameState> {
   final Player user = Player();
@@ -27,7 +12,7 @@ class GameCubit extends Cubit<GameState> {
   final Random _random;
   Timer? _countdownTimer;
   int _currentBall = 0;
-  final int _totalBallsPerInning = 6; // Could be AppConstants.totalBalls
+  final int _totalBallsPerInning = 6;
 
   GameCubit({Random? random})
     : _random = random ?? Random(),
@@ -39,7 +24,6 @@ class GameCubit extends Cubit<GameState> {
     return super.close();
   }
 
-  /// Starts the game, including the initial intro overlay sequence.
   void startGame() {
     _resetGameLogic();
     emit(
@@ -60,22 +44,19 @@ class GameCubit extends Cubit<GameState> {
     });
   }
 
-  /// Resets the internal game logic state.
   void _resetGameLogic() {
     user.reset();
     bot.reset();
     _currentBall = 0;
   }
 
-  /// Starts the 10-second countdown timer.
   void _startTimer() {
     _stopTimer();
     if (isClosed) return;
-    int timeLeft = AppConstants.maxTimerSeconds; // Use constant
+    int timeLeft = AppConstants.maxTimerSeconds;
     emit(state.copyWith(timeLeft: timeLeft));
 
     _countdownTimer = Timer.periodic(AppConstants.timerTickDuration, (timer) {
-      // Use constant
       if (isClosed) {
         timer.cancel();
         return;
@@ -89,13 +70,11 @@ class GameCubit extends Cubit<GameState> {
     });
   }
 
-  /// Stops the countdown timer.
   void _stopTimer() {
     _countdownTimer?.cancel();
     _countdownTimer = null;
   }
 
-  /// Handles the user selecting a number.
   void numberSelected(int userChoice) {
     if (state.isGameOver ||
         state.currentPhase != GamePhase.userBatting &&
@@ -121,14 +100,11 @@ class GameCubit extends Cubit<GameState> {
       if (isClosed) return;
       int botChoice = _getRandomNumber(1, 6);
 
-      // Emit state to SHOW the choices before processing the turn
       emit(state.copyWith(userChoice: userChoice, botChoice: botChoice));
 
-      // === Add a small delay to allow UI to render choices ===
-      await Future.delayed(const Duration(milliseconds: 500)); // e.g., 500ms
-      // =======================================================
+      await Future.delayed(const Duration(milliseconds: 500));
 
-      if (isClosed) return; // Check again after delay
+      if (isClosed) return;
 
       _playTurn(userChoice, botChoice);
 
@@ -155,7 +131,6 @@ class GameCubit extends Cubit<GameState> {
     });
   }
 
-  /// Handles the logic for a single turn based on the current phase.
   void _playTurn(int playerChoice, int botChoice) {
     if (isClosed || state.isGameOver) return;
     if (state.currentPhase == GamePhase.userBatting) {
@@ -165,7 +140,6 @@ class GameCubit extends Cubit<GameState> {
     }
   }
 
-  /// Logic for when the user is batting.
   void _handleBattingTurn(int userChoice, int botChoice) {
     bool isOut = userChoice == botChoice;
     bool isSix = !isOut && userChoice == 6;
@@ -197,7 +171,6 @@ class GameCubit extends Cubit<GameState> {
     }
   }
 
-  /// Logic for when the bot is batting (user is bowling).
   void _handleBowlingTurn(int userChoice, int botChoice) {
     bool isOut = userChoice == botChoice;
     bool isSix = !isOut && botChoice == 6;
@@ -232,23 +205,21 @@ class GameCubit extends Cubit<GameState> {
     }
   }
 
-  /// Handles timeout when the timer reaches zero.
   void _handleTimeout() {
     _stopTimer();
     if (isClosed || state.isGameOver) return;
 
     String winner;
     bool playWin = false, playLose = false;
-    OverlayType timeoutOverlay = OverlayType.none; // Variable for overlay
+    OverlayType timeoutOverlay = OverlayType.none;
 
     if (state.currentPhase == GamePhase.userBatting) {
       user.markOut();
-      winner = "Bot Wins! (Timeout)"; // Keep timeout text for clarity?
+      winner = "Bot Wins! (Timeout)";
       playLose = true;
-      timeoutOverlay = OverlayType.lost; // User lost
+      timeoutOverlay = OverlayType.lost;
     } else {
-      // User timed out while bowling, so user loses regardless of score
-      winner = "${AppStrings.youLostText} (Timeout)"; // Append timeout reason
+      winner = "${AppStrings.youLostText} (Timeout)";
       playWin = false;
       playLose = true;
       timeoutOverlay = OverlayType.lost;
@@ -260,17 +231,15 @@ class GameCubit extends Cubit<GameState> {
         winnerText: winner,
         currentPhase: GamePhase.gameOver,
         buttonsEnabled: false,
-        overlayType: timeoutOverlay, // Set the determined overlay
+        overlayType: timeoutOverlay,
         playWinSound: playWin,
         playLoseSound: playLose,
-        currentBall: _currentBall, // Keep ball info
-        totalBallsPerInning: _totalBallsPerInning, // Keep ball info
+        currentBall: _currentBall,
+        totalBallsPerInning: _totalBallsPerInning,
       ),
     );
-    // _endGame(); // REMOVE this call - _handleTimeout now sets final state
   }
 
-  /// Switches the game phase to bot batting.
   void _startBotInnings() {
     if (isClosed || state.isGameOver) return;
     _currentBall = 0;
@@ -292,10 +261,8 @@ class GameCubit extends Cubit<GameState> {
     });
   }
 
-  /// Ends the game and determines the winner.
   void _endGame() {
-    if (isClosed || state.currentPhase == GamePhase.gameOver)
-      return; // Avoid multiple end game calls
+    if (isClosed || state.currentPhase == GamePhase.gameOver) return;
     _stopTimer();
     String winner;
     OverlayType finalOverlay;
@@ -331,7 +298,6 @@ class GameCubit extends Cubit<GameState> {
     );
   }
 
-  /// Helper to show an overlay for a duration, then execute a callback.
   void _showOverlayAndContinue(OverlayType type, Function onComplete) {
     if (isClosed) return;
     emit(state.copyWith(overlayType: type, buttonsEnabled: false));
@@ -352,7 +318,6 @@ class GameCubit extends Cubit<GameState> {
     );
   }
 
-  /// Generates a random number between min and max (inclusive).
   int _getRandomNumber(int min, int max) {
     return min + _random.nextInt(max - min + 1);
   }

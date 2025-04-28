@@ -12,10 +12,7 @@ class GameDialogService {
   Future<void> showFinalScoreDialog(
     BuildContext context,
     GameState state,
-    // Optional callback if needed when dialog is dismissed by button
-    // VoidCallback? onPlayAgain,
   ) async {
-    // We assume BGM stop is handled elsewhere (e.g., GameAudioController listening to state)
     if (!context.mounted || !state.isGameOver || state.winnerText == null)
       return;
 
@@ -54,7 +51,6 @@ class GameDialogService {
               style: AppDecorations.dialogButtonStyle,
               child: const Text(AppStrings.playAgainButton),
               onPressed: () {
-                // Get controller and hide overlay before navigating
                 final overlayController = locator<GameOverlayController>();
                 overlayController.hideOverlay();
 

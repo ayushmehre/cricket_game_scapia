@@ -7,16 +7,10 @@ import 'package:get_it/get_it.dart';
 final GetIt locator = GetIt.instance;
 
 void setupLocator() {
-  // Services
   locator.registerLazySingleton(() => AudioManager());
   locator.registerLazySingleton(() => GameDialogService());
-
-  // Controllers (depend on other services)
   locator.registerLazySingleton(
     () => GameAudioController(audioManager: locator<AudioManager>()),
   );
   locator.registerLazySingleton(() => GameOverlayController());
-
-  // You might register Cubits/Blocs here too if needed globally,
-  // but often they are provided closer to the UI tree (like in GameScreen).
 }

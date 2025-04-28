@@ -11,8 +11,7 @@ class ScoreboardWidget extends StatelessWidget {
   final int botScore;
   final String userStatus;
   final String botStatus;
-  final int?
-  targetScore; // Nullable if no target is set (e.g., user batting first)
+  final int? targetScore;
   final int timeLeft;
   final int currentBall;
   final int totalBallsPerInning;

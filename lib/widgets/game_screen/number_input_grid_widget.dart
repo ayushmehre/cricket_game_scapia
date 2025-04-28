@@ -20,10 +20,8 @@ class NumberInputGridWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the audio controller instance
     final GameAudioController audioController = locator<GameAudioController>();
 
-    // Use constants for padding/spacing
     return GridView.builder(
       padding: const EdgeInsets.symmetric(
         horizontal: AppConstants.numberGridPadding,
@@ -39,19 +37,14 @@ class NumberInputGridWidget extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         int number = index + 1;
-        // Determine if this specific button is the one visually pressed
         bool isPressed = pressedButtonNumber == number;
 
-        // Get the appropriate image path (always the base image now)
-        String imagePath = AppAssets.images.getNumberButtonPath(
-          number /* Removed isPressed */,
-        );
+        String imagePath = AppAssets.images.getNumberButtonPath(number);
 
         Widget imageWidget = Image.asset(
           imagePath,
           fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) {
-            // Fallback widget if image fails to load
             return Container(
               color: AppConstants.errorBackgroundColor.withOpacity(
                 AppConstants.errorBackgroundOpacity,
@@ -63,22 +56,16 @@ class NumberInputGridWidget extends StatelessWidget {
           },
         );
 
-        // Wrap with AspectRatio to maintain size
         Widget sizedImageWidget = AspectRatio(
           aspectRatio: AppConstants.numberGridAspectRatio,
           child: imageWidget,
         );
 
-        // Apply scale transform if this button is pressed
         Widget finalButtonWidget =
             isPressed
-                ? Transform.scale(
-                  scale: 0.9, // Scale down by 10%
-                  child: sizedImageWidget,
-                )
+                ? Transform.scale(scale: 0.9, child: sizedImageWidget)
                 : sizedImageWidget;
 
-        // Use GestureDetector for interaction
         return GestureDetector(
           onTap:
               isEnabled
@@ -87,7 +74,7 @@ class NumberInputGridWidget extends StatelessWidget {
                     onNumberSelected(number);
                   }
                   : null,
-          child: finalButtonWidget, // Use potentially scaled widget
+          child: finalButtonWidget,
         );
       },
     );

@@ -4,7 +4,7 @@ import 'package:cricket_game_scapia/utils/app_strings.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  setupLocator(); // Initialize the locator
+  setupLocator();
   runApp(const HandCricketApp());
 }
 

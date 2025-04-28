@@ -14,12 +14,12 @@ class AppAssets {
 class _Images {
   const _Images(); // Keep constructor const
 
-  // Start Screen
+  // --- Start Screen ---
   final String step1 = 'assets/images/step_1.png';
   final String step2 = 'assets/images/step_2.png';
   final String step3 = 'assets/images/step_3.png';
 
-  // Game Screen Overlays
+  // --- Game Screen Overlays ---
   final String battingOverlay = 'assets/images/batting.png';
   final String outOverlay = 'assets/images/out.png';
   final String sixerOverlay = 'assets/images/sixer.png';
@@ -28,12 +28,12 @@ class _Images {
   final String lostOverlay = 'assets/images/you_lost.png';
   final String tieOverlay = 'assets/images/its_a_tie.png';
 
-  // Game Screen UI Elements
+  // --- Game Screen UI Elements ---
   final String background = 'assets/images/background.png';
   final String playerIcon = 'assets/images/player_icon.png';
   final String botIcon = 'assets/images/bot_icon.png';
 
-  // Number Buttons
+  // --- Number Buttons ---
   String getNumberButtonPath(int number) {
     switch (number) {
       case 1:
@@ -58,10 +58,10 @@ class _Images {
 class _Audio {
   const _Audio(); // Keep constructor const
 
-  // Start Screen
+  // --- Start Screen ---
   final String startGame = 'audio/game_start.mp3';
 
-  // Game Screen
+  // --- Game Screen ---
   final String bgm = 'audio/game_bg_music.mp3';
   final String out = 'audio/game_out.mp3';
   final String sixer = 'audio/game_sixer.mp3';

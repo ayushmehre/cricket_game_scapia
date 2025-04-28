@@ -9,7 +9,6 @@ class GameAudioController {
 
   GameAudioController({required AudioManager audioManager})
     : _audioManager = audioManager {
-    // Initialize audio manager
     _initAudio();
   }
 
@@ -21,19 +20,6 @@ class GameAudioController {
       debugPrint("Failed to initialize or play BGM in GameAudioController: $e");
     }
   }
-
-  // TODO: Implement method to listen to GameState changes
-  // void listenToGameState(Stream<GameState> gameStateStream) {
-  //   _gameStateSubscription?.cancel();
-  //   _gameStateSubscription = gameStateStream.listen((state) {
-  //     if (state.playOutSound) playSfx(AppAssets.audio.out);
-  //     if (state.playSixerSound) playSfx(AppAssets.audio.sixer);
-  //     // ... other sounds
-  //     if (state.isGameOver) {
-  //       _audioManager.stopBgm();
-  //     }
-  //   });
-  // }
 
   Future<void> playSfx(String path) async {
     try {
@@ -53,6 +39,6 @@ class GameAudioController {
 
   void dispose() {
     _gameStateSubscription?.cancel();
-    _audioManager.dispose(); // Dispose the managed AudioManager
+    _audioManager.dispose();
   }
 }

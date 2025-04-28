@@ -1,19 +1,17 @@
-/// Contains constant strings used throughout the application.
 class AppStrings {
-  // Prevents instantiation
   AppStrings._();
 
-  // --- General --- //
+  // --- General ---
   static const String gameTitle = 'Hand Cricket';
-  static const String appTitle = 'HandCricketApp'; // Added for MaterialApp
+  static const String appTitle = 'HandCricketApp';
   static const String appName = 'Cricket Game';
   static const String startGame = 'Start Game';
 
-  // --- Start Screen --- //
+  // --- Start Screen ---
   static const String howToPlay = 'How to play';
   static const String startPlayingButton = 'Start Playing';
 
-  // --- Game Screen --- //
+  // --- Game Screen ---
   static const String yourScoreLabel = 'Your Score';
   static const String botScoreLabel = 'Bot Score';
   static const String battingStatus = 'Batting';
@@ -29,7 +27,7 @@ class AppStrings {
   static const String sixerText = 'SIXER!';
   static const String youWonText = 'You Won!';
   static const String youLostText = 'You Lost!';
-  static const String itsATieText = 'It\'s a Tie!'; // Escaped apostrophe
+  static const String itsATieText = 'It\'s a Tie!';
   static const String playAgainButton = 'Play Again';
   static const String targetLabel = 'Target';
   static const String scoreLabel = 'Score';

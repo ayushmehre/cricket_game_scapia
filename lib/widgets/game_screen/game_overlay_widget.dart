@@ -38,7 +38,7 @@ class GameOverlayWidget extends StatelessWidget {
                     fit: BoxFit.contain,
                     // Optional: Add errorBuilder for image loading errors
                     errorBuilder: (context, error, stackTrace) {
-                      print("Error loading overlay image: $error");
+                      debugPrint("Error loading overlay image: $error");
                       return Icon(
                         Icons.error,
                         color:
