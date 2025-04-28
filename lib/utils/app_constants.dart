@@ -38,6 +38,8 @@ class AppConstants {
   static const double dialogContentSpacing = 10.0;
   static const double statusTextVerticalPadding = 10.0;
   static const double overlayErrorIconSize = 60.0;
+  static const double turnInfoBoxPadding = 12.0;
+  static const double turnInfoBoxRadius = 8.0;
 
   // UI Colors (Consider a separate AppColors class if this grows)
   static const Color scoreboardGradientColor1 = Color(0xFF8B4513);

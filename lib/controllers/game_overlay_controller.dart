@@ -59,14 +59,21 @@ class GameOverlayController {
       case OverlayType.tie:
         return AppAssets.images.tieOverlay;
       case OverlayType.none:
-      default:
         return null;
     }
   }
 
   void dispose() {
+    isVisible.dispose();
     opacity.dispose();
     imagePath.dispose();
-    isVisible.dispose();
+  }
+
+  // Added method to explicitly hide the overlay
+  void hideOverlay() {
+    isVisible.value = false;
+    opacity.value = 0.0;
+    // Optionally clear the image path, though opacity=0 should hide it
+    imagePath.value = null;
   }
 }

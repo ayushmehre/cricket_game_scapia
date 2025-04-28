@@ -1,8 +1,6 @@
-import 'package:cricket_game_scapia/utils/app_constants.dart'; // Import AppConstants
-import 'package:cricket_game_scapia/utils/app_text_styles.dart'; // Import AppTextStyles
+import 'package:cricket_game_scapia/utils/app_constants.dart';
+import 'package:cricket_game_scapia/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
-
-// Added imports
 import 'package:cricket_game_scapia/controllers/game_audio_controller.dart';
 import 'package:cricket_game_scapia/locator.dart';
 import 'package:cricket_game_scapia/utils/app_assets.dart';
@@ -10,7 +8,7 @@ import 'package:cricket_game_scapia/utils/app_assets.dart';
 /// Displays the grid of number buttons (1-6) for user input.
 class NumberInputGridWidget extends StatelessWidget {
   final bool isEnabled;
-  final int? pressedButtonNumber; // Track which button is visually pressed
+  final int? pressedButtonNumber;
   final Function(int) onNumberSelected;
 
   const NumberInputGridWidget({
@@ -44,16 +42,14 @@ class NumberInputGridWidget extends StatelessWidget {
         // Determine if this specific button is the one visually pressed
         bool isPressed = pressedButtonNumber == number;
 
-        // Get the appropriate image path
+        // Get the appropriate image path (always the base image now)
         String imagePath = AppAssets.images.getNumberButtonPath(
-          number,
-          isPressed,
+          number /* Removed isPressed */,
         );
 
         Widget imageWidget = Image.asset(
           imagePath,
-          fit: BoxFit.contain, // Adjust fit as needed
-          // Add error builder for robustness
+          fit: BoxFit.contain,
           errorBuilder: (context, error, stackTrace) {
             // Fallback widget if image fails to load
             return Container(
@@ -73,14 +69,14 @@ class NumberInputGridWidget extends StatelessWidget {
           child: imageWidget,
         );
 
-        // Wrap with Opacity if disabled
-        // Widget buttonContent =
-        //     isEnabled
-        //         ? sizedImageWidget
-        //         : Opacity(
-        //             opacity: AppConstants.numberButtonDisabledOpacity,
-        //             child: sizedImageWidget,
-        //           );
+        // Apply scale transform if this button is pressed
+        Widget finalButtonWidget =
+            isPressed
+                ? Transform.scale(
+                  scale: 0.9, // Scale down by 10%
+                  child: sizedImageWidget,
+                )
+                : sizedImageWidget;
 
         // Use GestureDetector for interaction
         return GestureDetector(
@@ -91,8 +87,7 @@ class NumberInputGridWidget extends StatelessWidget {
                     onNumberSelected(number);
                   }
                   : null,
-          // child: buttonContent, // Old logic
-          child: sizedImageWidget, // Always show the sized image directly
+          child: finalButtonWidget, // Use potentially scaled widget
         );
       },
     );

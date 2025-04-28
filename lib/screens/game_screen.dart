@@ -13,6 +13,7 @@ import '../widgets/game_screen/scoreboard_widget.dart';
 import '../widgets/game_screen/status_text_widget.dart';
 import '../widgets/game_screen/number_input_grid_widget.dart';
 import '../widgets/game_screen/game_overlay_widget.dart';
+import '../widgets/game_screen/turn_info_widget.dart';
 import '../utils/app_constants.dart';
 import '../utils/app_text_styles.dart';
 
@@ -71,7 +72,10 @@ class _GameViewState extends State<_GameView> {
         _overlayController.updateOverlayState(state);
 
         if (state.isGameOver && state.winnerText != null) {
-          Future.delayed(AppConstants.dialogShowDelay, () {
+          final totalDelay =
+              AppConstants.resultOverlayHoldDuration +
+              AppConstants.dialogShowDelay;
+          Future.delayed(totalDelay, () {
             if (mounted) {
               _dialogService.showFinalScoreDialog(context, state);
             }
@@ -94,12 +98,36 @@ class _GameViewState extends State<_GameView> {
   Widget build(BuildContext context) {
     return BlocBuilder<GameCubit, GameState>(
       builder: (context, state) {
-        bool isUserBattingPhase = state.currentPhase == GamePhase.userBatting;
-        String statusText =
-            isUserBattingPhase
-                ? AppStrings.chooseNumberPrompt
-                : AppStrings.botChoosingPrompt;
+        // Determine Status Texts
+        String line1Text;
+        String line2Text;
 
+        if (state.isGameOver) {
+          line1Text = state.winnerText ?? ''; // Show winner text or empty
+          line2Text = ''; // No role when game is over
+        } else if (state.buttonsEnabled) {
+          // User's turn to act
+          if (state.currentPhase == GamePhase.userBatting) {
+            line1Text = AppStrings.selectNumberBattingPrompt;
+            line2Text = AppStrings.userRoleBatting;
+          } else {
+            // botBatting phase
+            line1Text = AppStrings.selectNumberBowlingPrompt;
+            line2Text = AppStrings.userRoleBowling;
+          }
+        } else {
+          // Waiting state (buttons disabled, game not over)
+          line1Text = AppStrings.calculatingResultPrompt;
+          if (state.currentPhase == GamePhase.userBatting) {
+            line2Text = AppStrings.userRoleBatting;
+          } else {
+            // botBatting phase
+            line2Text = AppStrings.userRoleBowling;
+          }
+        }
+
+        // Determine user/bot status labels (unchanged)
+        bool isUserBattingPhase = state.currentPhase == GamePhase.userBatting;
         String userStatus =
             isUserBattingPhase
                 ? AppStrings.battingStatus
@@ -142,9 +170,20 @@ class _GameViewState extends State<_GameView> {
                       botStatus: botStatus,
                       targetScore: targetScore,
                       timeLeft: state.timeLeft,
+                      currentBall: state.currentBall,
+                      totalBallsPerInning: state.totalBallsPerInning,
                     ),
-                    Expanded(flex: 2, child: Placeholder()),
-                    StatusTextWidget(statusText: statusText),
+                    Expanded(
+                      flex: 2,
+                      child: TurnInfoWidget(
+                        userChoice: state.userChoice,
+                        botChoice: state.botChoice,
+                      ),
+                    ),
+                    StatusTextWidget(
+                      line1Text: line1Text,
+                      line2Text: line2Text,
+                    ),
                     Expanded(
                       flex: 1,
                       child: NumberInputGridWidget(

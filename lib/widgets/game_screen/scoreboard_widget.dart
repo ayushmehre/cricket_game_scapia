@@ -14,6 +14,8 @@ class ScoreboardWidget extends StatelessWidget {
   final int?
   targetScore; // Nullable if no target is set (e.g., user batting first)
   final int timeLeft;
+  final int currentBall;
+  final int totalBallsPerInning;
 
   const ScoreboardWidget({
     super.key,
@@ -23,6 +25,8 @@ class ScoreboardWidget extends StatelessWidget {
     required this.botStatus,
     this.targetScore,
     required this.timeLeft,
+    required this.currentBall,
+    required this.totalBallsPerInning,
   });
 
   @override
@@ -60,6 +64,11 @@ class ScoreboardWidget extends StatelessWidget {
               style: AppTextStyles.targetScore,
             ),
           ],
+          const SizedBox(height: 8),
+          Text(
+            '${totalBallsPerInning - currentBall} balls left',
+            style: AppTextStyles.playerLabel,
+          ),
         ],
       ),
     );

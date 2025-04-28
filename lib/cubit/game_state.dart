@@ -27,6 +27,10 @@ class GameState extends Equatable {
   final bool playLoseSound;
   final bool playTieSound;
   final bool triggerThrowAnimation;
+  final int currentBall;
+  final int totalBallsPerInning;
+  final int? userChoice;
+  final int? botChoice;
 
   const GameState({
     this.userScore = 0,
@@ -46,6 +50,10 @@ class GameState extends Equatable {
     this.playLoseSound = false,
     this.playTieSound = false,
     this.triggerThrowAnimation = false,
+    this.currentBall = 0,
+    this.totalBallsPerInning = 6,
+    this.userChoice,
+    this.botChoice,
   });
 
   GameState copyWith({
@@ -66,8 +74,14 @@ class GameState extends Equatable {
     bool? playLoseSound,
     bool? playTieSound,
     bool? triggerThrowAnimation,
+    int? currentBall,
+    int? totalBallsPerInning,
     bool clearPressedButton = false,
     bool clearWinnerText = false,
+    int? userChoice,
+    int? botChoice,
+    bool clearUserChoice = false,
+    bool clearBotChoice = false,
   }) {
     return GameState(
       userScore: userScore ?? this.userScore,
@@ -90,6 +104,10 @@ class GameState extends Equatable {
       playLoseSound: playLoseSound ?? false,
       playTieSound: playTieSound ?? false,
       triggerThrowAnimation: triggerThrowAnimation ?? false,
+      currentBall: currentBall ?? this.currentBall,
+      totalBallsPerInning: totalBallsPerInning ?? this.totalBallsPerInning,
+      userChoice: clearUserChoice ? null : (userChoice ?? this.userChoice),
+      botChoice: clearBotChoice ? null : (botChoice ?? this.botChoice),
     );
   }
 
@@ -112,5 +130,9 @@ class GameState extends Equatable {
     playLoseSound,
     playTieSound,
     triggerThrowAnimation,
+    currentBall,
+    totalBallsPerInning,
+    userChoice,
+    botChoice,
   ];
 }

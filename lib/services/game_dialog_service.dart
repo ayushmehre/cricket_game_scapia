@@ -5,6 +5,8 @@ import 'package:cricket_game_scapia/utils/app_strings.dart';
 import 'package:cricket_game_scapia/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:cricket_game_scapia/utils/app_constants.dart';
+import 'package:cricket_game_scapia/locator.dart';
+import 'package:cricket_game_scapia/controllers/game_overlay_controller.dart';
 
 class GameDialogService {
   Future<void> showFinalScoreDialog(
@@ -52,6 +54,10 @@ class GameDialogService {
               style: AppDecorations.dialogButtonStyle,
               child: const Text(AppStrings.playAgainButton),
               onPressed: () {
+                // Get controller and hide overlay before navigating
+                final overlayController = locator<GameOverlayController>();
+                overlayController.hideOverlay();
+
                 Navigator.of(dialogContext).pop();
                 Navigator.pushAndRemoveUntil(
                   context,

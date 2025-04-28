@@ -43,9 +43,11 @@ class GameCubit extends Cubit<GameState> {
   void startGame() {
     _resetGameLogic();
     emit(
-      const GameState(
+      GameState(
         currentPhase: GamePhase.userBatting,
         overlayType: OverlayType.battingIntro,
+        currentBall: _currentBall,
+        totalBallsPerInning: _totalBallsPerInning,
       ),
     );
     Future.delayed(AppConstants.overlayHoldDuration, () {
@@ -107,12 +109,27 @@ class GameCubit extends Cubit<GameState> {
         pressedButtonNumber: userChoice,
         buttonsEnabled: false,
         triggerThrowAnimation: shouldTriggerAnim,
+        currentBall: _currentBall,
+        totalBallsPerInning: _totalBallsPerInning,
+        userChoice: userChoice,
+        botChoice: null,
+        clearBotChoice: true,
       ),
     );
 
-    Future.delayed(AppConstants.animationDelay, () {
+    Future.delayed(AppConstants.animationDelay, () async {
       if (isClosed) return;
       int botChoice = _getRandomNumber(1, 6);
+
+      // Emit state to SHOW the choices before processing the turn
+      emit(state.copyWith(userChoice: userChoice, botChoice: botChoice));
+
+      // === Add a small delay to allow UI to render choices ===
+      await Future.delayed(const Duration(milliseconds: 500)); // e.g., 500ms
+      // =======================================================
+
+      if (isClosed) return; // Check again after delay
+
       _playTurn(userChoice, botChoice);
 
       bool enableButtonsAfterTurn =
@@ -125,6 +142,10 @@ class GameCubit extends Cubit<GameState> {
           buttonsEnabled: enableButtonsAfterTurn,
           clearPressedButton: true,
           triggerThrowAnimation: false,
+          currentBall: _currentBall,
+          totalBallsPerInning: _totalBallsPerInning,
+          clearUserChoice: true,
+          clearBotChoice: true,
         ),
       );
 
@@ -157,7 +178,15 @@ class GameCubit extends Cubit<GameState> {
       _showOverlayAndContinue(OverlayType.out, _startBotInnings);
     } else {
       user.addRuns(userChoice);
-      emit(state.copyWith(userScore: user.runs, playSixerSound: isSix));
+      emit(
+        state.copyWith(
+          userScore: user.runs,
+          playSixerSound: isSix,
+          overlayType: OverlayType.none,
+          currentBall: _currentBall,
+          totalBallsPerInning: _totalBallsPerInning,
+        ),
+      );
       if (isSix) {
         _showOverlayAndContinue(OverlayType.sixer, () {
           if (inningsOver && !state.isGameOver) _startBotInnings();
@@ -183,7 +212,15 @@ class GameCubit extends Cubit<GameState> {
       bot.addRuns(botChoice);
       bool targetReached =
           state.targetScore != null && bot.runs > state.targetScore!;
-      emit(state.copyWith(botScore: bot.runs, playSixerSound: isSix));
+      emit(
+        state.copyWith(
+          botScore: bot.runs,
+          playSixerSound: isSix,
+          overlayType: OverlayType.none,
+          currentBall: _currentBall,
+          totalBallsPerInning: _totalBallsPerInning,
+        ),
+      );
 
       if (isSix) {
         _showOverlayAndContinue(OverlayType.sixer, () {
@@ -202,21 +239,19 @@ class GameCubit extends Cubit<GameState> {
 
     String winner;
     bool playWin = false, playLose = false;
+    OverlayType timeoutOverlay = OverlayType.none; // Variable for overlay
+
     if (state.currentPhase == GamePhase.userBatting) {
       user.markOut();
-      winner = "Bot Wins! (Timeout)";
+      winner = "Bot Wins! (Timeout)"; // Keep timeout text for clarity?
       playLose = true;
+      timeoutOverlay = OverlayType.lost; // User lost
     } else {
-      bot.markOut();
-      winner =
-          (state.targetScore != null && state.botScore > state.targetScore!)
-              ? AppStrings.youLostText
-              : AppStrings.youWonText;
-      if (winner == AppStrings.youWonText) {
-        playWin = true;
-      } else {
-        playLose = true;
-      }
+      // User timed out while bowling, so user loses regardless of score
+      winner = "${AppStrings.youLostText} (Timeout)"; // Append timeout reason
+      playWin = false;
+      playLose = true;
+      timeoutOverlay = OverlayType.lost;
     }
 
     emit(
@@ -225,12 +260,14 @@ class GameCubit extends Cubit<GameState> {
         winnerText: winner,
         currentPhase: GamePhase.gameOver,
         buttonsEnabled: false,
-        overlayType: OverlayType.none,
+        overlayType: timeoutOverlay, // Set the determined overlay
         playWinSound: playWin,
         playLoseSound: playLose,
+        currentBall: _currentBall, // Keep ball info
+        totalBallsPerInning: _totalBallsPerInning, // Keep ball info
       ),
     );
-    _endGame();
+    // _endGame(); // REMOVE this call - _handleTimeout now sets final state
   }
 
   /// Switches the game phase to bot batting.
@@ -243,6 +280,8 @@ class GameCubit extends Cubit<GameState> {
         targetScore: user.runs,
         buttonsEnabled: false,
         playInningsChangeSound: true,
+        currentBall: _currentBall,
+        totalBallsPerInning: _totalBallsPerInning,
       ),
     );
     _showOverlayAndContinue(OverlayType.defend, () {
@@ -286,6 +325,8 @@ class GameCubit extends Cubit<GameState> {
         playWinSound: playWin,
         playLoseSound: playLose,
         playTieSound: playTie,
+        currentBall: _currentBall,
+        totalBallsPerInning: _totalBallsPerInning,
       ),
     );
   }

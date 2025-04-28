@@ -147,6 +147,22 @@ class AppTextStyles {
     letterSpacing: 1.2,
   );
 
+  static final TextStyle playerRoleText = _base.copyWith(
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+    color: Colors.white70, // Slightly subdued color
+  );
+
+  static final TextStyle turnInfoText = _base.copyWith(
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+    shadows: [
+      // Add subtle shadow for readability
+      Shadow(blurRadius: 2, color: Colors.black54, offset: Offset(1, 1)),
+    ],
+  ); // Added
+
   // --- Error/Fallback Style ---
   static final TextStyle errorText = TextStyle(
     color: AppConstants.errorForegroundColor,

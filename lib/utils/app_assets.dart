@@ -26,30 +26,29 @@ class _Images {
   final String defendOverlay = 'assets/images/game_defend.png';
   final String wonOverlay = 'assets/images/you_won.png';
   final String lostOverlay = 'assets/images/you_lost.png';
-  final String tieOverlay = 'assets/images/tie_game.png';
+  final String tieOverlay = 'assets/images/its_a_tie.png';
 
   // Game Screen UI Elements
   final String background = 'assets/images/background.png';
+  final String playerIcon = 'assets/images/player_icon.png';
+  final String botIcon = 'assets/images/bot_icon.png';
 
-  // Number Buttons (assuming names like one.png, one_pressed.png etc.)
-  String getNumberButtonPath(int number, bool isPressed) {
-    final state = isPressed ? '_pressed' : '';
+  // Number Buttons
+  String getNumberButtonPath(int number) {
     switch (number) {
       case 1:
-        return 'assets/images/one$state.png';
+        return 'assets/images/one.png';
       case 2:
-        return 'assets/images/two$state.png';
+        return 'assets/images/two.png';
       case 3:
-        return 'assets/images/three$state.png';
+        return 'assets/images/three.png';
       case 4:
-        return 'assets/images/four$state.png';
+        return 'assets/images/four.png';
       case 5:
-        return 'assets/images/five$state.png';
+        return 'assets/images/five.png';
       case 6:
-        return 'assets/images/six$state.png';
+        return 'assets/images/six.png';
       default:
-        // Return a default or handle error, maybe placeholder?
-        // For now, let's assume number is always 1-6
         return 'assets/images/one.png'; // Fallback
     }
   }

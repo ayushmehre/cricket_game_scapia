@@ -18,8 +18,13 @@ class AppStrings {
   static const String botScoreLabel = 'Bot Score';
   static const String battingStatus = 'Batting';
   static const String bowlingStatus = 'Bowling';
-  static const String chooseNumberPrompt = 'Choose a number (1-6)';
-  static const String botChoosingPrompt = 'Bot is choosing...';
+  static const String selectNumberBattingPrompt = 'Select your number (1-6)';
+  static const String selectNumberBowlingPrompt = 'Select number to bowl (1-6)';
+  static const String calculatingResultPrompt = 'Calculating result...';
+  static const String userRoleBatting = "You're Batting";
+  static const String userRoleBowling = "You're Bowling";
+  static const String turnInfoYouSelected = "You selected";
+  static const String turnInfoBotSelected = "Bot selected";
   static const String outText = 'OUT!';
   static const String sixerText = 'SIXER!';
   static const String youWonText = 'You Won!';
