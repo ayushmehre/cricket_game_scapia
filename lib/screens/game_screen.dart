@@ -16,6 +16,7 @@ import '../widgets/game_screen/game_overlay_widget.dart';
 import '../widgets/game_screen/turn_info_widget.dart';
 import '../utils/app_constants.dart';
 import '../utils/app_text_styles.dart';
+import 'package:cricket_game_scapia/interfaces/i_game_audio_controller.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
