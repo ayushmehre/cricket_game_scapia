@@ -54,10 +54,12 @@ class _GameViewState extends State<_GameView> {
     _gameStateSubscription = stream.listen(
       (state) {
         if (state.playOutSound) _audioController.playSfx(AppAssets.audio.out);
-        if (state.playSixerSound)
+        if (state.playSixerSound) {
           _audioController.playSfx(AppAssets.audio.sixer);
-        if (state.playInningsChangeSound)
+        }
+        if (state.playInningsChangeSound) {
           _audioController.playSfx(AppAssets.audio.inningsChange);
+        }
         if (state.playWinSound) _audioController.playSfx(AppAssets.audio.win);
         if (state.playLoseSound) _audioController.playSfx(AppAssets.audio.lose);
         if (state.playTieSound) _audioController.playSfx(AppAssets.audio.tie);

@@ -210,12 +210,13 @@ class GameCubit extends Cubit<GameState> {
       bot.markOut();
       winner =
           (state.targetScore != null && state.botScore > state.targetScore!)
-              ? "Bot Wins!"
-              : "You Win! (Timeout)";
-      if (winner.contains("You Win"))
+              ? AppStrings.youLostText
+              : AppStrings.youWonText;
+      if (winner == AppStrings.youWonText) {
         playWin = true;
-      else
+      } else {
         playLose = true;
+      }
     }
 
     emit(

@@ -56,10 +56,10 @@ class AppConstants {
   static final Color numberButtonDisabledText = Colors.grey.shade400;
   static final Color overlayBackgroundColor = Colors.black;
   static final Color overlayErrorIconColor = Colors.red;
-  static final Color dialogWinColor = Colors.green.shade700;
-  static final Color dialogLoseColor = Colors.red.shade700;
-  static final Color dialogTieColor = Colors.orange.shade700;
-  static final Color dialogDefaultColor = Colors.blueGrey;
+  static final Color dialogWinColor = Colors.green;
+  static const Color dialogLoseColor = Colors.red;
+  static final Color dialogTieColor = Colors.white;
+  static final Color dialogDefaultColor = Colors.white;
   static final Color errorBackgroundColor = Colors.black;
   static final Color errorForegroundColor = Colors.red;
 

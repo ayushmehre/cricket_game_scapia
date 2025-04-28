@@ -39,7 +39,12 @@ class AppTextStyles {
   static final TextStyle statusText = TextStyle(
     fontSize: 24,
     fontWeight: FontWeight.bold,
-    color: Colors.indigo.shade900, // Non-const color requires final
+    color: const Color.fromARGB(
+      255,
+      0,
+      255,
+      153,
+    ), // Non-const color requires final
     shadows: const [
       Shadow(blurRadius: 1, color: Colors.white, offset: Offset(1, 1)),
     ],
@@ -114,6 +119,7 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
     fontSize: 28,
     fontFamily: AppTextStyles.pacificoFontFamily, // Use existing constant
+    color: Colors.white, // Added base color
   );
 
   static const TextStyle dialogContent = TextStyle(

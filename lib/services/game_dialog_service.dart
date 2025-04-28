@@ -67,11 +67,11 @@ class GameDialogService {
   }
 
   Color _getResultColor(String resultText) {
-    if (resultText.contains(AppStrings.youWonText)) {
+    if (resultText.startsWith(AppStrings.youWonText)) {
       return AppConstants.dialogWinColor;
-    } else if (resultText.contains(AppStrings.youLostText)) {
+    } else if (resultText.startsWith(AppStrings.youLostText)) {
       return AppConstants.dialogLoseColor;
-    } else if (resultText.contains(AppStrings.itsATieText)) {
+    } else if (resultText.startsWith(AppStrings.itsATieText)) {
       return AppConstants.dialogTieColor;
     } else {
       return AppConstants.dialogDefaultColor;

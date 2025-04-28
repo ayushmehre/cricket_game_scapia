@@ -74,13 +74,13 @@ class NumberInputGridWidget extends StatelessWidget {
         );
 
         // Wrap with Opacity if disabled
-        Widget buttonContent =
-            isEnabled
-                ? sizedImageWidget
-                : Opacity(
-                  opacity: AppConstants.numberButtonDisabledOpacity,
-                  child: sizedImageWidget,
-                );
+        // Widget buttonContent =
+        //     isEnabled
+        //         ? sizedImageWidget
+        //         : Opacity(
+        //             opacity: AppConstants.numberButtonDisabledOpacity,
+        //             child: sizedImageWidget,
+        //           );
 
         // Use GestureDetector for interaction
         return GestureDetector(
@@ -91,7 +91,8 @@ class NumberInputGridWidget extends StatelessWidget {
                     onNumberSelected(number);
                   }
                   : null,
-          child: buttonContent,
+          // child: buttonContent, // Old logic
+          child: sizedImageWidget, // Always show the sized image directly
         );
       },
     );
