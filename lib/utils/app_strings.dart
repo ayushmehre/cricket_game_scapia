@@ -25,15 +25,4 @@ class AppStrings {
   static const String itsATieText = 'It\'s a Tie!'; // Escaped apostrophe
   static const String playAgainButton = 'Play Again';
   static const String targetLabel = 'Target';
-
-  // --- Assets -> Images --- //
-  // Removed - Moved to AppAssets
-
-  // --- Assets -> Audio --- //
-  // Removed - Moved to AppAssets
-
-  // --- Assets -> Rive --- //
-  // Removed - Moved to AppAssets
-
-  // Add other strings as needed
 }

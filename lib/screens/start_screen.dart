@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-// Keep text_styles if needed elsewhere, otherwise remove
-// import 'package:cricket_game_scapia/utils/text_styles.dart';
 import 'package:cricket_game_scapia/screens/game_screen.dart';
 import 'package:cricket_game_scapia/utils/app_decorations.dart';
 import 'package:cricket_game_scapia/widgets/start_screen/game_title.dart';
@@ -20,15 +18,6 @@ class StartScreen extends StatefulWidget {
 }
 
 class _StartScreenState extends State<StartScreen> {
-  void _navigateToGameScreen() {
-    // Check if the widget is still mounted before navigating
-    if (!mounted) return;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const GameScreen()),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,14 +30,13 @@ class _StartScreenState extends State<StartScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   const SizedBox(height: 60),
-                  // Animated Game Title - Now self-contained
                   const GameTitle(),
                   const SizedBox(height: 40),
                   // How to Play Instructions
                   const HowToPlaySection(),
                   const SizedBox(height: 40),
                   // Start Playing Button
-                  StartPlayingBtn(onPressed: _navigateToGameScreen),
+                  const StartPlayingBtn(),
                   const SizedBox(height: 40),
                 ],
               ),
