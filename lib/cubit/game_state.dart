@@ -1,8 +1,9 @@
-import 'package:cricket_game_scapia/controllers/game_controller.dart'
-    show GamePhase; // Import GamePhase
 import 'package:cricket_game_scapia/cubit/game_cubit.dart';
 import 'package:cricket_game_scapia/models/player.dart'; // Keep trying this path
 import 'package:equatable/equatable.dart';
+
+/// Enum defining the current phase of the game.
+enum GamePhase { userBatting, botBatting, gameOver }
 
 /// Enum representing the type of overlay to display.
 enum OverlayType { none, battingIntro, out, sixer, defend, won, lost, tie }
