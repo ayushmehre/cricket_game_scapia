@@ -5,7 +5,7 @@ class TurnResult {
   final bool isOut;
   final bool isSix;
   final bool isEndOfInnings;
-  final bool targetReached; // Only relevant for bot's turn
+  final bool targetReached;
 
   TurnResult({
     this.runsScored = 0,

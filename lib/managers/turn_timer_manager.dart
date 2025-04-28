@@ -16,7 +16,7 @@ class TurnTimerManager {
   });
 
   void start() {
-    stop(); // Ensure any existing timer is cancelled
+    stop();
     if (isOwnerClosed()) return;
 
     int timeLeft = AppConstants.maxTimerSeconds;
@@ -31,7 +31,7 @@ class TurnTimerManager {
       timeLeft--;
 
       if (timeLeft <= 0) {
-        timer.cancel(); // Stop timer before calling timeout
+        timer.cancel();
         onTimeout();
       } else {
         onTick(timeLeft);
