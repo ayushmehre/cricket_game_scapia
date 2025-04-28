@@ -8,6 +8,7 @@ class AppTextStyles {
   // --- Font Families --- (Could also be in AppConstants)
   static const String digitalFontFamily = 'Digital-7';
   static const String pacificoFontFamily = 'Pacifico';
+  static const String creepsterFontFamily = 'Creepster';
 
   // --- Scoreboard Styles ---
   static const TextStyle targetScore = TextStyle(

@@ -70,9 +70,10 @@ class NumberInputGridWidget extends StatelessWidget {
                   color: AppConstants.numberButtonDisabledText,
                 );
 
-        // TODO: Extract 'Creepster' font family into AppTextStyles/Constants
-        // For now, apply it here
-        final finalTextStyle = textStyle.copyWith(fontFamily: 'Creepster');
+        // Apply the font family using the constant
+        final finalTextStyle = textStyle.copyWith(
+          fontFamily: AppTextStyles.creepsterFontFamily,
+        );
 
         Widget child = Text('$number', style: finalTextStyle);
 
