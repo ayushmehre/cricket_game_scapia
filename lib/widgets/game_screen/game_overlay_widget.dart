@@ -20,7 +20,7 @@ class GameOverlayWidget extends StatelessWidget {
       visible: isVisible,
       child: AnimatedOpacity(
         opacity: opacity,
-        duration: AppConstants.overlayFadeDuration, // Use constant
+        duration: AppConstants.overlayFadeDuration,
         child: Container(
           color: AppConstants
               .overlayBackgroundColor // Use constant

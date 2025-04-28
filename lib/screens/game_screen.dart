@@ -56,8 +56,9 @@ class _GameViewState extends State<_GameView> {
       (state) {
         if (state.playOutSound) _audioController.playOutSfx();
         if (state.playSixerSound) _audioController.playSixerSfx();
-        if (state.playInningsChangeSound)
+        if (state.playInningsChangeSound) {
           _audioController.playInningsChangeSfx();
+        }
         if (state.playWinSound) _audioController.playWinSfx();
         if (state.playLoseSound) _audioController.playLoseSfx();
         if (state.playTieSound) _audioController.playTieSfx();
