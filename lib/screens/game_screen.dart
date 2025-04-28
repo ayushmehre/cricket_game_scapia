@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'package:cricket_game_scapia/controllers/game_audio_controller.dart';
 import 'package:cricket_game_scapia/controllers/game_overlay_controller.dart';
 import 'package:cricket_game_scapia/cubit/game_cubit.dart';
 import 'package:cricket_game_scapia/cubit/game_state.dart';
 import 'package:cricket_game_scapia/locator.dart';
-import 'package:cricket_game_scapia/services/game_dialog_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../utils/app_strings.dart';
@@ -17,6 +15,7 @@ import '../widgets/game_screen/turn_info_widget.dart';
 import '../utils/app_constants.dart';
 import '../utils/app_text_styles.dart';
 import 'package:cricket_game_scapia/interfaces/i_game_audio_controller.dart';
+import '../widgets/dialogs/final_score_dialog_widget.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -41,7 +40,6 @@ class _GameViewState extends State<_GameView> {
   final IGameAudioController _audioController = locator<IGameAudioController>();
   final GameOverlayController _overlayController =
       locator<GameOverlayController>();
-  final GameDialogService _dialogService = locator<GameDialogService>();
 
   StreamSubscription? _gameStateSubscription;
 
@@ -75,7 +73,11 @@ class _GameViewState extends State<_GameView> {
               AppConstants.dialogShowDelay;
           Future.delayed(totalDelay, () {
             if (mounted) {
-              _dialogService.showFinalScoreDialog(context, state);
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (_) => FinalScoreDialogWidget(state: state),
+              );
             }
           });
         }

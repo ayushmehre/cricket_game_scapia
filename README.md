@@ -72,7 +72,7 @@ This project demonstrates a basic Hand Cricket game where the user plays against
   - `screens/`: UI screens (`start_screen.dart`, `game_screen.dart`).
   - `widgets/`: Reusable UI components, categorized by screen.
   - `controllers/`: UI-specific controllers (`GameAudioController`, `GameOverlayController`).
-  - `services/`: Business logic services (`GameDialogService`).
+  - `services/`: Contains the `AudioManager`.
   - `models/`: Data models (e.g., `Player`).
   - `utils/`: Utility classes (`AppAssets`, `AppStrings`, `AppTextStyles`, `AppConstants`, `AppDecorations`).
   - `locator.dart`: Dependency injection setup.
