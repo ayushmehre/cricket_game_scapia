@@ -1,3 +1,4 @@
+import 'package:cricket_game_scapia/utils/app_decorations.dart';
 import 'package:cricket_game_scapia/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:cricket_game_scapia/utils/app_strings.dart';
@@ -20,13 +21,11 @@ class HowToPlaySection extends StatelessWidget {
     return Column(
       children: [
         ShaderMask(
-          shaderCallback: (bounds) => AppTextStyles.goldGradientShader,
+          shaderCallback: (bounds) => AppDecorations.goldGradientShader,
           child: Text(
             AppStrings.howToPlay,
             // Use headingGold or the new fallback style
-            style:
-                AppTextStyles.headingGold ??
-                AppTextStyles.howToPlayHeadingFallback,
+            style: AppTextStyles.headingGold,
           ),
         ),
         const SizedBox(height: 30), // Adjusted spacing

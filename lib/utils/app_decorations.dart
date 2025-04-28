@@ -56,4 +56,13 @@ class AppDecorations {
     textStyle: AppTextStyles.dialogButtonText, // Link to the text style
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
   );
+
+  // --- Shaders / Effects ---
+  static final Shader goldGradientShader = LinearGradient(
+    colors: <Color>[Colors.yellow.shade300, Colors.yellow.shade800],
+    begin: Alignment.centerLeft,
+    end: Alignment.centerRight,
+  ).createShader(
+    const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
+  ); // Consider making Rect configurable
 }

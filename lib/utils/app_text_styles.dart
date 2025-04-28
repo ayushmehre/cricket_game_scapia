@@ -93,13 +93,6 @@ class AppTextStyles {
     fontFamily: pacificoFontFamily,
   );
 
-  // --- Shaders ---
-  static final Shader goldGradientShader = LinearGradient(
-    colors: <Color>[Colors.yellow.shade300, Colors.yellow.shade800],
-    begin: Alignment.centerLeft,
-    end: Alignment.centerRight,
-  ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
-
   // --- Number Input Grid Styles ---
   static const TextStyle numberButton = TextStyle(
     fontSize: 24.0,
