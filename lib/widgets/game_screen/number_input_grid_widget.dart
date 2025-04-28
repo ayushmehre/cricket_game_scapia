@@ -2,6 +2,11 @@ import 'package:cricket_game_scapia/utils/app_constants.dart'; // Import AppCons
 import 'package:cricket_game_scapia/utils/app_text_styles.dart'; // Import AppTextStyles
 import 'package:flutter/material.dart';
 
+// Added imports
+import 'package:cricket_game_scapia/controllers/game_audio_controller.dart';
+import 'package:cricket_game_scapia/locator.dart';
+import 'package:cricket_game_scapia/utils/app_assets.dart';
+
 /// Displays the grid of number buttons (1-6) for user input.
 class NumberInputGridWidget extends StatelessWidget {
   final bool isEnabled;
@@ -17,77 +22,76 @@ class NumberInputGridWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the audio controller instance
+    final GameAudioController audioController = locator<GameAudioController>();
+
     // Use constants for padding/spacing
     return GridView.builder(
       padding: const EdgeInsets.symmetric(
         horizontal: AppConstants.numberGridPadding,
-        vertical: 10.0,
+        vertical: AppConstants.numberGridVerticalPadding,
       ),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+        crossAxisCount: AppConstants.numberGridColumnCount,
         crossAxisSpacing: AppConstants.numberGridSpacing,
         mainAxisSpacing: AppConstants.numberGridSpacing,
         childAspectRatio: AppConstants.numberGridAspectRatio,
       ),
-      itemCount: 6,
+      itemCount: AppConstants.maxBattingNumber,
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         int number = index + 1;
+        // Determine if this specific button is the one visually pressed
         bool isPressed = pressedButtonNumber == number;
 
-        // Use constants/styles
-        final buttonStyle = ElevatedButton.styleFrom(
-          foregroundColor:
-              AppConstants.numberButtonText, // Text color for enabled
-          backgroundColor:
-              isEnabled
-                  ? (isPressed
-                      ? AppConstants.numberButtonPressedBg
-                      : AppConstants.numberButtonBg)
-                  : AppConstants.numberButtonDisabledBg,
-          disabledForegroundColor:
-              AppConstants.numberButtonDisabledText, // Text color for disabled
-          disabledBackgroundColor: AppConstants.numberButtonDisabledBg,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-            // Consider making border color/width constants too if needed
-            side: BorderSide(
-              color: isEnabled ? Colors.brown.shade800 : Colors.grey.shade600,
-              width: 2,
-            ),
-          ),
-          elevation:
-              isEnabled ? (isPressed ? 2 : 5) : 0, // Elevation logic remains
-          padding: EdgeInsets.zero,
+        // Get the appropriate image path
+        String imagePath = AppAssets.images.getNumberButtonPath(
+          number,
+          isPressed,
         );
 
-        // Get text style from AppTextStyles and override color if disabled
-        final baseTextStyle = AppTextStyles.numberButton;
-        final textStyle =
+        Widget imageWidget = Image.asset(
+          imagePath,
+          fit: BoxFit.contain, // Adjust fit as needed
+          // Add error builder for robustness
+          errorBuilder: (context, error, stackTrace) {
+            // Fallback widget if image fails to load
+            return Container(
+              color: AppConstants.errorBackgroundColor.withOpacity(
+                AppConstants.errorBackgroundOpacity,
+              ),
+              child: Center(
+                child: Text('$number', style: AppTextStyles.errorText),
+              ),
+            );
+          },
+        );
+
+        // Wrap with AspectRatio to maintain size
+        Widget sizedImageWidget = AspectRatio(
+          aspectRatio: AppConstants.numberGridAspectRatio,
+          child: imageWidget,
+        );
+
+        // Wrap with Opacity if disabled
+        Widget buttonContent =
             isEnabled
-                ? baseTextStyle
-                : baseTextStyle.copyWith(
-                  color: AppConstants.numberButtonDisabledText,
+                ? sizedImageWidget
+                : Opacity(
+                  opacity: AppConstants.numberButtonDisabledOpacity,
+                  child: sizedImageWidget,
                 );
 
-        // Apply the font family using the constant
-        final finalTextStyle = textStyle.copyWith(
-          fontFamily: AppTextStyles.creepsterFontFamily,
-        );
-
-        Widget child = Text('$number', style: finalTextStyle);
-
-        // Apply disabled opacity using Opacity widget if button is disabled
-        return ElevatedButton(
-          onPressed: isEnabled ? () => onNumberSelected(number) : null,
-          style: buttonStyle,
-          child:
+        // Use GestureDetector for interaction
+        return GestureDetector(
+          onTap:
               isEnabled
-                  ? child
-                  : Opacity(
-                    opacity: AppConstants.numberButtonDisabledOpacity,
-                    child: child,
-                  ),
+                  ? () {
+                    audioController.playSfx(AppAssets.audio.click);
+                    onNumberSelected(number);
+                  }
+                  : null,
+          child: buttonContent,
         );
       },
     );

@@ -3,6 +3,7 @@ import 'package:cricket_game_scapia/utils/app_decorations.dart';
 import 'package:cricket_game_scapia/utils/app_strings.dart';
 import 'package:cricket_game_scapia/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:cricket_game_scapia/utils/app_constants.dart';
 
 /// Displays the game scoreboard including scores, status, timer, and target.
 class ScoreboardWidget extends StatelessWidget {
@@ -27,23 +28,12 @@ class ScoreboardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0),
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage(AppAssets.images.woodBoard),
-          fit: BoxFit.fill,
-        ),
-        borderRadius: BorderRadius.circular(10.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+      padding: const EdgeInsets.all(AppConstants.scoreboardPadding),
+      margin: const EdgeInsets.symmetric(
+        horizontal: AppConstants.scoreboardHorizontalMargin,
+        vertical: AppConstants.scoreboardVerticalMargin,
       ),
+      decoration: AppDecorations.scoreboardDecoration,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -51,24 +41,23 @@ class ScoreboardWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _ScoreDisplay(
-                labelImagePath: AppAssets.images.scoreBoardYou,
+                label: AppStrings.youLabel,
                 score: userScore,
                 status: userStatus,
               ),
-              _TimerDisplay(timeLeft: timeLeft), // Use extracted timer widget
+              _TimerDisplay(timeLeft: timeLeft),
               _ScoreDisplay(
-                labelImagePath: AppAssets.images.scoreBoardBot,
+                label: AppStrings.botLabel,
                 score: botScore,
                 status: botStatus,
               ),
             ],
           ),
-          // Display Target if available
           if (targetScore != null) ...[
-            const SizedBox(height: 10),
+            const SizedBox(height: AppConstants.dialogContentSpacing),
             Text(
               '${AppStrings.targetLabel}: $targetScore',
-              style: AppTextStyles.targetScore, // Use defined style
+              style: AppTextStyles.targetScore,
             ),
           ],
         ],
@@ -89,14 +78,18 @@ class _TimerDisplay extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         SizedBox(
-          width: 60,
-          height: 60,
+          width: AppConstants.timerWidgetSize,
+          height: AppConstants.timerWidgetSize,
           child: CircularProgressIndicator(
-            value: timeLeft / 10.0, // Assuming 10 seconds max
-            strokeWidth: 5,
-            backgroundColor: Colors.white.withOpacity(0.3),
+            value: timeLeft / AppConstants.maxTimerSeconds,
+            strokeWidth: AppConstants.timerStrokeWidth,
+            backgroundColor: AppConstants.timerBackgroundColor.withOpacity(
+              AppConstants.timerBackgroundOpacity,
+            ),
             valueColor: AlwaysStoppedAnimation<Color>(
-              timeLeft > 3 ? Colors.lightGreenAccent : Colors.redAccent,
+              timeLeft > AppConstants.timerWarningThreshold
+                  ? AppConstants.timerNormalColor
+                  : AppConstants.timerWarningColor,
             ),
           ),
         ),
@@ -111,39 +104,33 @@ class _TimerDisplay extends StatelessWidget {
 
 /// Helper Widget for individual score display (You/Bot).
 class _ScoreDisplay extends StatelessWidget {
-  final String labelImagePath;
+  final String label;
   final int score;
   final String status;
 
   const _ScoreDisplay({
-    required this.labelImagePath,
+    required this.label,
     required this.score,
     required this.status,
   });
 
   @override
   Widget build(BuildContext context) {
-    // Determine color based on status
     final statusColor =
         status == AppStrings.battingStatus
-            ? Colors.lightGreenAccent.shade100
-            : Colors.orangeAccent.shade100;
+            ? AppConstants.playerStatusBattingColor
+            : AppConstants.playerStatusBowlingColor;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Image.asset(labelImagePath, height: 30),
-        const SizedBox(height: 8),
-        Text(
-          '$score',
-          style: AppTextStyles.playerScore, // Use defined style
-        ),
-        const SizedBox(height: 4),
+        Text(label, style: AppTextStyles.playerLabel),
+        const SizedBox(height: AppConstants.scoreDisplaySpacingMedium),
+        Text('$score', style: AppTextStyles.playerScore),
+        const SizedBox(height: AppConstants.scoreDisplaySpacingSmall),
         Text(
           status,
-          style: AppTextStyles.playerStatusBase.copyWith(
-            color: statusColor,
-          ), // Use base style + color
+          style: AppTextStyles.playerStatusBase.copyWith(color: statusColor),
         ),
       ],
     );

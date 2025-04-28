@@ -1,3 +1,4 @@
+import 'package:cricket_game_scapia/utils/app_constants.dart'; // Import AppConstants
 import 'package:cricket_game_scapia/utils/app_text_styles.dart'; // Import AppTextStyles
 import 'package:flutter/material.dart';
 
@@ -41,6 +42,32 @@ class AppDecorations {
         offset: const Offset(0, 2),
       ),
     ],
+  );
+
+  // --- Scoreboard ---
+  static const scoreboardGradient = LinearGradient(
+    colors: [
+      AppConstants.scoreboardGradientColor1,
+      AppConstants.scoreboardGradientColor2,
+      AppConstants.scoreboardGradientColor1, // Repeat for effect
+    ],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static final scoreboardShadow = [
+    BoxShadow(
+      color: AppConstants.scoreboardShadowColor,
+      spreadRadius: 2, // Keep hardcoded or make constants?
+      blurRadius: 5, // Keep hardcoded or make constants?
+      offset: const Offset(0, 3), // Keep hardcoded or make constants?
+    ),
+  ];
+
+  static final scoreboardDecoration = BoxDecoration(
+    gradient: scoreboardGradient,
+    borderRadius: BorderRadius.circular(AppConstants.scoreboardBorderRadius),
+    boxShadow: scoreboardShadow,
   );
 
   // --- Game Dialog Styles ---

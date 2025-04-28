@@ -8,17 +8,11 @@ class AppAssets {
 
   /// Access audio asset paths.
   static const _Audio audio = _Audio();
-
-  /// Access Rive asset paths and animation names.
-  static const _Rive rive = _Rive();
 }
 
 /// Defines image asset paths.
 class _Images {
   const _Images(); // Keep constructor const
-
-  // Base path (optional, but can be useful)
-  // static const String _base = 'assets/images';
 
   // Start Screen
   final String step1 = 'assets/images/step_1.png';
@@ -27,18 +21,38 @@ class _Images {
 
   // Game Screen Overlays
   final String battingOverlay = 'assets/images/batting.png';
-  final String outOverlay = 'assets/images/game_out.png';
-  final String sixerOverlay = 'assets/images/game_sixer.png';
+  final String outOverlay = 'assets/images/out.png';
+  final String sixerOverlay = 'assets/images/sixer.png';
   final String defendOverlay = 'assets/images/game_defend.png';
   final String wonOverlay = 'assets/images/you_won.png';
   final String lostOverlay = 'assets/images/you_lost.png';
   final String tieOverlay = 'assets/images/tie_game.png';
 
   // Game Screen UI Elements
-  final String woodBoard = 'assets/images/wood_board.png';
-  final String scoreBoardYou = 'assets/images/score_board_you.png';
-  final String scoreBoardBot = 'assets/images/score_board_bot.png';
   final String background = 'assets/images/background.png';
+
+  // Number Buttons (assuming names like one.png, one_pressed.png etc.)
+  String getNumberButtonPath(int number, bool isPressed) {
+    final state = isPressed ? '_pressed' : '';
+    switch (number) {
+      case 1:
+        return 'assets/images/one$state.png';
+      case 2:
+        return 'assets/images/two$state.png';
+      case 3:
+        return 'assets/images/three$state.png';
+      case 4:
+        return 'assets/images/four$state.png';
+      case 5:
+        return 'assets/images/five$state.png';
+      case 6:
+        return 'assets/images/six$state.png';
+      default:
+        // Return a default or handle error, maybe placeholder?
+        // For now, let's assume number is always 1-6
+        return 'assets/images/one.png'; // Fallback
+    }
+  }
 }
 
 /// Defines audio asset paths.
@@ -56,15 +70,5 @@ class _Audio {
   final String win = 'audio/game_win.mp3';
   final String lose = 'audio/game_lose.mp3';
   final String tie = 'audio/game_tie.mp3';
-  final String click = 'audio/click.mp3';
-}
-
-/// Defines Rive asset paths and animation names.
-class _Rive {
-  const _Rive(); // Keep constructor const
-
-  // Make fields final instance members, not static const
-  final String character = 'assets/rive/cricket_char.riv';
-  final String idleAnimation = 'Idle';
-  final String throwAnimation = 'Throw';
+  final String click = 'audio/beep.mp3';
 }

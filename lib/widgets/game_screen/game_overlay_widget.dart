@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cricket_game_scapia/utils/app_constants.dart';
 
 /// Displays a semi-transparent overlay with an image, used for game events.
 class GameOverlayWidget extends StatelessWidget {
@@ -19,23 +20,30 @@ class GameOverlayWidget extends StatelessWidget {
       visible: isVisible,
       child: AnimatedOpacity(
         opacity: opacity,
-        duration: const Duration(milliseconds: 300), // Standard fade duration
+        duration: AppConstants.overlayFadeDuration, // Use constant
         child: Container(
-          color: Colors.black.withOpacity(0.7), // Standard background
+          color: AppConstants
+              .overlayBackgroundColor // Use constant
+              .withOpacity(
+                AppConstants.overlayBackgroundOpacity,
+              ), // Use constant
           alignment: Alignment.center,
           child:
               imagePath != null
                   ? Image.asset(
                     imagePath!,
-                    height: MediaQuery.of(context).size.height * 0.4,
+                    height:
+                        MediaQuery.of(context).size.height *
+                        AppConstants.overlayImageHeightFactor, // Use constant
                     fit: BoxFit.contain,
                     // Optional: Add errorBuilder for image loading errors
                     errorBuilder: (context, error, stackTrace) {
                       print("Error loading overlay image: $error");
-                      return const Icon(
+                      return Icon(
                         Icons.error,
-                        color: Colors.red,
-                        size: 60,
+                        color:
+                            AppConstants.overlayErrorIconColor, // Use constant
+                        size: AppConstants.overlayErrorIconSize, // Use constant
                       );
                     },
                   )

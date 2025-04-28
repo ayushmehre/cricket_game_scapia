@@ -4,6 +4,7 @@ import 'package:cricket_game_scapia/utils/app_decorations.dart';
 import 'package:cricket_game_scapia/utils/app_strings.dart';
 import 'package:cricket_game_scapia/utils/app_text_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:cricket_game_scapia/utils/app_constants.dart';
 
 class GameDialogService {
   Future<void> showFinalScoreDialog(
@@ -38,7 +39,7 @@ class GameDialogService {
                 '${AppStrings.yourScoreLabel}: ${state.userScore}',
                 style: AppTextStyles.dialogContent,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: AppConstants.dialogContentSpacing),
               Text(
                 '${AppStrings.botScoreLabel}: ${state.botScore}',
                 style: AppTextStyles.dialogContent,
@@ -67,13 +68,13 @@ class GameDialogService {
 
   Color _getResultColor(String resultText) {
     if (resultText.contains(AppStrings.youWonText)) {
-      return Colors.green.shade700;
+      return AppConstants.dialogWinColor;
     } else if (resultText.contains(AppStrings.youLostText)) {
-      return Colors.red.shade700;
+      return AppConstants.dialogLoseColor;
     } else if (resultText.contains(AppStrings.itsATieText)) {
-      return Colors.orange.shade700;
+      return AppConstants.dialogTieColor;
     } else {
-      return Colors.blueGrey;
+      return AppConstants.dialogDefaultColor;
     }
   }
 }

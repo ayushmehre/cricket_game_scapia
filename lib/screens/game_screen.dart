@@ -13,7 +13,8 @@ import '../widgets/game_screen/scoreboard_widget.dart';
 import '../widgets/game_screen/status_text_widget.dart';
 import '../widgets/game_screen/number_input_grid_widget.dart';
 import '../widgets/game_screen/game_overlay_widget.dart';
-import '../widgets/game_screen/character_animation_widget.dart';
+import '../utils/app_constants.dart';
+import '../utils/app_text_styles.dart';
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -39,9 +40,6 @@ class _GameViewState extends State<_GameView> {
   final GameOverlayController _overlayController =
       locator<GameOverlayController>();
   final GameDialogService _dialogService = locator<GameDialogService>();
-
-  final GlobalKey<CharacterAnimationWidgetState> _characterAnimKey =
-      GlobalKey();
 
   StreamSubscription? _gameStateSubscription;
 
@@ -70,12 +68,8 @@ class _GameViewState extends State<_GameView> {
 
         _overlayController.updateOverlayState(state);
 
-        if (state.triggerThrowAnimation) {
-          _characterAnimKey.currentState?.playThrow();
-        }
-
         if (state.isGameOver && state.winnerText != null) {
-          Future.delayed(const Duration(milliseconds: 500), () {
+          Future.delayed(AppConstants.dialogShowDelay, () {
             if (mounted) {
               _dialogService.showFinalScoreDialog(context, state);
             }
@@ -91,8 +85,6 @@ class _GameViewState extends State<_GameView> {
   @override
   void dispose() {
     _gameStateSubscription?.cancel();
-    _audioController.dispose();
-    _overlayController.dispose();
     super.dispose();
   }
 
@@ -129,11 +121,11 @@ class _GameViewState extends State<_GameView> {
                 height: double.infinity,
                 errorBuilder:
                     (context, error, stackTrace) => Container(
-                      color: Colors.black,
-                      child: const Center(
+                      color: AppConstants.errorBackgroundColor,
+                      child: Center(
                         child: Text(
                           'Error loading background',
-                          style: TextStyle(color: Colors.red),
+                          style: AppTextStyles.errorText,
                         ),
                       ),
                     ),
@@ -149,10 +141,7 @@ class _GameViewState extends State<_GameView> {
                       targetScore: targetScore,
                       timeLeft: state.timeLeft,
                     ),
-                    Expanded(
-                      flex: 2,
-                      child: CharacterAnimationWidget(key: _characterAnimKey),
-                    ),
+                    Expanded(flex: 2, child: Placeholder()),
                     StatusTextWidget(statusText: statusText),
                     Expanded(
                       flex: 1,

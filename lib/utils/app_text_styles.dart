@@ -128,6 +128,25 @@ class AppTextStyles {
     color: Colors.black, // Specific color for this button
   );
 
+  // Base styles
+  static const TextStyle _base = TextStyle(
+    fontFamily: 'Roboto', // Example font
+    color: Colors.white,
+  );
+
+  static final TextStyle playerLabel = _base.copyWith(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: Colors.yellowAccent.shade100, // Example color
+    letterSpacing: 1.2,
+  );
+
+  // --- Error/Fallback Style ---
+  static final TextStyle errorText = TextStyle(
+    color: AppConstants.errorForegroundColor,
+    fontSize: 14, // Example size, adjust as needed
+  );
+
   // Add other reusable text styles here
   // static const TextStyle buttonText = TextStyle(...);
 }
