@@ -24,13 +24,14 @@ class Player {
 class GameCubit extends Cubit<GameState> {
   final Player user = Player();
   final Player bot = Player();
-  final Random _random = Random();
+  final Random _random;
   Timer? _countdownTimer;
   int _currentBall = 0;
   final int _totalBallsPerInning = 6; // Could be AppConstants.totalBalls
 
-  // Use imported GamePhase
-  GameCubit() : super(const GameState(currentPhase: GamePhase.userBatting));
+  GameCubit({Random? random})
+    : _random = random ?? Random(),
+      super(const GameState(currentPhase: GamePhase.userBatting));
 
   @override
   Future<void> close() {
