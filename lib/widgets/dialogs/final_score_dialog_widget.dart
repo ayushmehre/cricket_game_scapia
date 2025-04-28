@@ -58,7 +58,6 @@ class FinalScoreDialogWidget extends StatelessWidget {
           style: AppDecorations.dialogButtonStyle,
           child: const Text(AppStrings.playAgainButton),
           onPressed: () {
-            // Logic moved inside the widget's button callback
             final overlayController = locator<GameOverlayController>();
             overlayController.hideOverlay();
 

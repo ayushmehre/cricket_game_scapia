@@ -1,5 +1,6 @@
 import 'dart:async';
-import 'package:cricket_game_scapia/controllers/game_overlay_controller.dart';
+import 'package:cricket_game_scapia/controllers/game_overlay_controller.dart'
+    as controller;
 import 'package:cricket_game_scapia/cubit/game_cubit.dart';
 import 'package:cricket_game_scapia/cubit/game_state.dart';
 import 'package:cricket_game_scapia/locator.dart';
@@ -38,8 +39,8 @@ class _GameView extends StatefulWidget {
 
 class _GameViewState extends State<_GameView> {
   final IGameAudioController _audioController = locator<IGameAudioController>();
-  final GameOverlayController _overlayController =
-      locator<GameOverlayController>();
+  final controller.GameOverlayController _overlayController =
+      locator<controller.GameOverlayController>();
 
   StreamSubscription? _gameStateSubscription;
 
@@ -192,23 +193,13 @@ class _GameViewState extends State<_GameView> {
                   ],
                 ),
               ),
-              ValueListenableBuilder<bool>(
-                valueListenable: _overlayController.isVisible,
-                builder: (_, isVisible, __) {
-                  return ValueListenableBuilder<double>(
-                    valueListenable: _overlayController.opacity,
-                    builder: (_, opacity, __) {
-                      return ValueListenableBuilder<String?>(
-                        valueListenable: _overlayController.imagePath,
-                        builder: (_, imagePath, __) {
-                          return GameOverlayWidget(
-                            isVisible: isVisible,
-                            opacity: opacity,
-                            imagePath: imagePath,
-                          );
-                        },
-                      );
-                    },
+              ValueListenableBuilder<controller.OverlayState>(
+                valueListenable: _overlayController.overlayState,
+                builder: (_, overlay, __) {
+                  return GameOverlayWidget(
+                    isVisible: overlay.isVisible,
+                    opacity: overlay.opacity,
+                    imagePath: overlay.imagePath,
                   );
                 },
               ),

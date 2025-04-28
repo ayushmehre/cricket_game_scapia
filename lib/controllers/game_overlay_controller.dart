@@ -2,78 +2,73 @@ import 'package:cricket_game_scapia/cubit/game_state.dart';
 import 'package:cricket_game_scapia/utils/app_assets.dart';
 import 'package:flutter/foundation.dart';
 
+class OverlayState {
+  final String? imagePath;
+  final bool isVisible;
+  final double opacity;
+
+  const OverlayState({
+    this.imagePath,
+    this.isVisible = false,
+    this.opacity = 0.0,
+  });
+}
+
 class GameOverlayController {
-  // Use ValueNotifiers for reactive state
-  final ValueNotifier<double> opacity = ValueNotifier(0.0);
-  final ValueNotifier<String?> imagePath = ValueNotifier(null);
-  final ValueNotifier<bool> isVisible = ValueNotifier(false);
+  final ValueNotifier<OverlayState> overlayState = ValueNotifier(
+    const OverlayState(),
+  );
 
-  // Keep track of the last processed overlay type to avoid redundant updates
-  OverlayType _lastOverlayType = OverlayType.none;
-
-  // Method to update overlay based on GameState
   void updateOverlayState(GameState state) {
     final currentType = state.overlayType;
 
-    // Only update if the type has changed
-    if (currentType == _lastOverlayType) return;
+    final newState = switch (currentType) {
+      OverlayType.none => const OverlayState(),
+      OverlayType.battingIntro => OverlayState(
+        imagePath: AppAssets.images.battingOverlay,
+        isVisible: true,
+        opacity: 1.0,
+      ),
+      OverlayType.out => OverlayState(
+        imagePath: AppAssets.images.outOverlay,
+        isVisible: true,
+        opacity: 1.0,
+      ),
+      OverlayType.sixer => OverlayState(
+        imagePath: AppAssets.images.sixerOverlay,
+        isVisible: true,
+        opacity: 1.0,
+      ),
+      OverlayType.defend => OverlayState(
+        imagePath: AppAssets.images.defendOverlay,
+        isVisible: true,
+        opacity: 1.0,
+      ),
+      OverlayType.won => OverlayState(
+        imagePath: AppAssets.images.wonOverlay,
+        isVisible: true,
+        opacity: 1.0,
+      ),
+      OverlayType.lost => OverlayState(
+        imagePath: AppAssets.images.lostOverlay,
+        isVisible: true,
+        opacity: 1.0,
+      ),
+      OverlayType.tie => OverlayState(
+        imagePath: AppAssets.images.tieOverlay,
+        isVisible: true,
+        opacity: 1.0,
+      ),
+    };
 
-    _lastOverlayType = currentType;
-
-    final newImagePath = _getImagePathForOverlay(currentType);
-    final newIsVisible = currentType != OverlayType.none;
-    final newOpacity = newIsVisible ? 1.0 : 0.0;
-
-    // Update notifiers - this will trigger UI updates where listeners are attached
-    imagePath.value = newImagePath;
-    isVisible.value = newIsVisible;
-    // Update opacity after a short delay if becoming visible,
-    // or immediately if becoming invisible
-    if (newIsVisible) {
-      // Tiny delay allows the widget to potentially be built before fading in
-      Future.delayed(const Duration(milliseconds: 50), () {
-        if (_lastOverlayType == currentType) {
-          // Check if state didn't change again rapidly
-          opacity.value = newOpacity;
-        }
-      });
-    } else {
-      opacity.value = newOpacity;
-    }
+    overlayState.value = newState;
   }
 
-  String? _getImagePathForOverlay(OverlayType type) {
-    switch (type) {
-      case OverlayType.battingIntro:
-        return AppAssets.images.battingOverlay;
-      case OverlayType.out:
-        return AppAssets.images.outOverlay;
-      case OverlayType.sixer:
-        return AppAssets.images.sixerOverlay;
-      case OverlayType.defend:
-        return AppAssets.images.defendOverlay;
-      case OverlayType.won:
-        return AppAssets.images.wonOverlay;
-      case OverlayType.lost:
-        return AppAssets.images.lostOverlay;
-      case OverlayType.tie:
-        return AppAssets.images.tieOverlay;
-      case OverlayType.none:
-        return null;
-    }
+  void hideOverlay() {
+    overlayState.value = const OverlayState();
   }
 
   void dispose() {
-    isVisible.dispose();
-    opacity.dispose();
-    imagePath.dispose();
-  }
-
-  // Added method to explicitly hide the overlay
-  void hideOverlay() {
-    isVisible.value = false;
-    opacity.value = 0.0;
-    // Optionally clear the image path, though opacity=0 should hide it
-    imagePath.value = null;
+    overlayState.dispose();
   }
 }
